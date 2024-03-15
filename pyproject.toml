@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "NEAT"
+version = "0.1.0"
+description = "Implementation of the Neuro-Evolution of Augmenting Topologies (NEAT)."
+authors = ["RJW20"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
