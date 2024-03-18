@@ -73,8 +73,8 @@ class Genome:
         for node in self.nodes:
             node.engage()
 
-        # Output the last self.output_count Nodes
-        return tuple(self.nodes[len(self.nodes) - self.output_count:])
+        # Return the last self.output_count Node output values
+        return tuple([node.output for node in self.nodes[len(self.nodes) - self.output_count:]])
 
     def __repr__(self) -> str:
         """Return representation of this Genome."""
