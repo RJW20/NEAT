@@ -1,24 +1,22 @@
+from typing import Callable
+
 from NEAT.connection import Connection
-from NEAT.activation_functions import sigmoid
+from NEAT.activation_functions import ActivationFunction
 
 
 class Node:
     """Node in the Neural Network of a Genome."""
 
-    def __init__(self, number: int, layer: int) -> None:
+    def __init__(self, number: int, layer: int, activation: ActivationFunction) -> None:
         self.number: int = number
+        self.layer: int = layer
+        self.activation: ActivationFunction = activation
         self.input: float = .0
         self.output_connections: list[Connection] = []
-        self.layer: int = layer
 
     @property
-    def output(self) -> None:
-        """Return sigmoid(self.input) or self.input if self.layer = 0"""
-
-        if self.layer != 0:
-            return sigmoid(self.input)
-        else:
-            return self.input
+    def output(self) -> float:
+        return self.activation(self.input)
 
     def engage(self) -> None:
         """Calculate self.output using activation function and add the value 
