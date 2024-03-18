@@ -36,8 +36,21 @@ class Genome:
     @property
     def next_node(self) -> int:
         """The number to assign to the next Node that is added to this Genome."""
-        return len(self.nodes) + 1
-    
+        return len(self.nodes) + 1        
+
+    def prepare_network(self) -> None:
+        """Prepare the list of Nodes to be used as a NN."""
+
+        # Assign all Connections to the Nodes themselves so we can engage them properly
+        for node in self.nodes:
+            node.output_connections.clear()
+        for connection in self.connections:
+            connection.from_node.output_connections.append(connection)
+
+        # Sort the Nodes by layer (first-key) and by number (second-key) so that they will be 
+        # engaged in the correct order and the input and output Nodes don't change position
+        self.nodes.sort(key=lambda node: (node.layer, node.number))
+
     def __repr__(self) -> str:
         """Return representation of this Genome."""
         return f'<Genome: Layers = {self.layers}, Nodes = {len(self.nodes)}, Connections = {len(self.connections)}>'
