@@ -17,6 +17,7 @@ class Genome:
         
         self.nodes: list[Node] = []
         self.connections: list[Connection] = []
+        self.layers: int = 2
 
         # Add input Nodes
         for _ in range(input_count):
@@ -35,5 +36,8 @@ class Genome:
     @property
     def next_node(self) -> int:
         """The number to assign to the next Node that is added to this Genome."""
-
         return len(self.nodes) + 1
+    
+    def __repr__(self) -> str:
+        """Return representation of this Genome."""
+        return f'<Genome: Layers = {self.layers}, Nodes = {len(self.nodes)}, Connections = {len(self.connections)}>'

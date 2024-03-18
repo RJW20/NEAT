@@ -16,3 +16,8 @@ class Connection:
         self.weight: float = weight
         self.innovation_number: int = innovation_number
         self.enabled: bool = enabled
+
+    def __repr__(self) -> str:
+        """Return representation of this Connection."""
+        return f'<Connection: From = {self.from_node.number}, To = {self.to_node.number}, 
+                 Innovation = {self.innovation_number}, Enabled = {self.enabled}>'
