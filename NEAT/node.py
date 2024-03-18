@@ -5,12 +5,12 @@ from NEAT.activation_functions import sigmoid
 class Node:
     """Node in the Neural Network of a Genome."""
 
-    def __init__(self) -> None:
-        self.number: int
-        self.input: float
-        self.output: float
-        self.output_connections: list[Connection]
-        self.layer: int
+    def __init__(self, number: int, layer: int) -> None:
+        self.number: int = number
+        self.input: float = .0
+        self.output: float = .0
+        self.output_connections: list[Connection] = []
+        self.layer: int = layer
 
     def engage(self) -> None:
         """Calculate self.output using activation function and add the value 
