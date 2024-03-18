@@ -1,13 +1,11 @@
-from typing import Callable
-
 from NEAT.connection import Connection
-from NEAT.activation_functions import ActivationFunction
+from NEAT.activation_functions import ActivationFunction, linear
 
 
 class Node:
     """Node in the Neural Network of a Genome."""
 
-    def __init__(self, number: int, layer: int, activation: ActivationFunction) -> None:
+    def __init__(self, number: int, layer: int, activation: ActivationFunction = linear) -> None:
         self.number: int = number
         self.layer: int = layer
         self.activation: ActivationFunction = activation
