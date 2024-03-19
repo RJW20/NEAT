@@ -1,4 +1,4 @@
-from NEAT.node import Node
+from NEAT.genome.node import Node
 
 
 class Connection:

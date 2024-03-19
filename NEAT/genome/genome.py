@@ -1,8 +1,8 @@
 from __future__ import annotations
 from typing import Iterable
 
-from NEAT.node import Node
-from NEAT.connection import Connection
+from NEAT.genome.node import Node
+from NEAT.genome.connection import Connection
 
 
 class Genome:

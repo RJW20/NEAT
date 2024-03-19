@@ -1,5 +1,5 @@
-from NEAT.connection import Connection
-from NEAT.activation_functions import ActivationFunction, linear
+from NEAT.genome.connection import Connection
+from NEAT.genome.activation_functions import ActivationFunction, linear
 
 
 class Node:

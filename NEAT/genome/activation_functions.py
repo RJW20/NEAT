@@ -1,5 +1,5 @@
 import math
-from typing import NewType, Callable, Literal
+from typing import Callable, Literal
 
 
 type ActivationFunction = Callable[[float], float]
