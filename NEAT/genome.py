@@ -27,14 +27,14 @@ class Genome:
             node = Node(number=self.next_node, layer=0)
             self.nodes.append(node)
 
+        # Add bias Node
+        node = Node(number=self.next_node, layer=0)
+        self.nodes.append(node)
+
         # Add output Nodes
         for _ in range(output_count):
             node = Node(number=self.next_node, layer=1)
             self.nodes.append(node)
-
-        # Add bias Node
-        node = Node(number=self.next_node, layer=0)
-        self.nodes.append(node)
 
     @property
     def next_node(self) -> int:
@@ -44,7 +44,7 @@ class Genome:
     def prepare_network(self) -> None:
         """Prepare the list of Nodes to be used as a NN."""
 
-        # Assign all Connections to the Nodes themselves so we can engage them properly
+        # Assign all Connections to the Nodes themselves so we can engage them
         for node in self.nodes:
             node.output_connections.clear()
         for connection in self.connections:
@@ -60,11 +60,11 @@ class Genome:
         The input must already be in order and normalised.
         """
 
-        # Clear all Node inputs
+        # Clear all Node input values
         for node in self.nodes:
             node.input = 0
 
-        # Set layer zero Nodes
+        # Set layer zero Nodes input values
         for i, value in enumerate(input):
             self.nodes[i].input = value
         self.nodes[self.bias_node_idx].input = 1
@@ -73,7 +73,7 @@ class Genome:
         for node in self.nodes:
             node.engage()
 
-        # Return the last self.output_count Node output values
+        # Return the output Node output values
         return tuple([node.output for node in self.nodes[len(self.nodes) - self.output_count:]])
 
     def __repr__(self) -> str:
