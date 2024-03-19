@@ -1,5 +1,5 @@
 from NEAT.genome import Genome
-from NEAT.node import Node
+from NEAT.genome.node import Node
 
 
 class Innovation:
