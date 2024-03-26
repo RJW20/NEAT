@@ -23,7 +23,7 @@ class Node:
         output = self.output
         for connection in self.output_connections:
             if connection.enabled:
-                connection.to_node += output * connection.weight
+                connection.to_node.input += output * connection.weight
 
     def __repr__(self) -> str:
         """Return representation of this Node."""
