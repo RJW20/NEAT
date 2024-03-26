@@ -1,3 +1,6 @@
+from __future__ import annotations
+import random
+
 from NEAT.genome.node import Node
 
 
@@ -16,6 +19,13 @@ class Connection:
         self.weight: float = weight
         self.innovation_number: int = innovation_number
         self.enabled: bool = enabled
+
+    @classmethod
+    def random_weight(cls, from_node: Node, to_node: Node, innovation_number: int) -> Connection:
+        """Return an enabled connection between the given Nodes with a random weight ~U[-1,1]."""
+
+        weight = random.uniform(-1, 1)
+        return cls(from_node, to_node, weight, innovation_number)
 
     def __repr__(self) -> str:
         """Return representation of this Connection."""
