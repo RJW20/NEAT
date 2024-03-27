@@ -12,7 +12,7 @@ class Innovation:
 
     def __init__(self, number: int, genome: Genome, from_node: Node, to_node: Node) -> None:
         self.number: int = number
-        self.present_connections: list[int] = [connection.innovation_number for connection in genome.connections]
+        self.present_connections: set[int] = genome.innovation_numbers.copy()
         self.from_node_number: int = from_node.number
         self.to_node_number: int = to_node.number
 

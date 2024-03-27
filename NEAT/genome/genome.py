@@ -45,6 +45,11 @@ class Genome:
             genome.nodes.append(node)
 
     @property
+    def innovation_numbers(self) -> set:
+        """Return the innovation numbers found in the this Genome's Connections."""
+        return {connection.innovation_number for connection in self.connections}
+
+    @property
     def next_node(self) -> int:
         """The number to assign to the next Node that is added to this Genome."""
         return len(self.nodes)
@@ -163,7 +168,6 @@ class Genome:
         
         return clone
             
-
     def __repr__(self) -> str:
         """Return representation of this Genome."""
         return f'<Genome: Layers = {self.layers}, Nodes = {len(self.nodes)}, Connections = {len(self.connections)}>'
