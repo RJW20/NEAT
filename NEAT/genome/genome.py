@@ -19,7 +19,6 @@ class Genome:
         self.nodes: list[Node] = []
         self.connections: list[Connection] = []
         self.layers: int = 2
-        self.bias_node_idx: int = input_count
         self.output_count: int = output_count
 
         # Add input Nodes
@@ -28,7 +27,8 @@ class Genome:
             self.nodes.append(node)
 
         # Add bias Node
-        node = Node(number=self.next_node, layer=0)
+        self.bias_node_idx = self.next_node
+        node = Node(number=self.bias_node_idx, layer=0)
         self.nodes.append(node)
 
         # Add output Nodes
@@ -40,6 +40,31 @@ class Genome:
     def next_node(self) -> int:
         """The number to assign to the next Node that is added to this Genome."""
         return len(self.nodes)
+    
+    @property
+    def fully_connected(self) -> bool:
+        """Return True if the NN is fully connected."""
+
+        # Create a dictionary containing the number of Nodes in each layer
+        nodes_in_layers = {layer: 0 for layer in range(self.layers)}
+        for node in self.nodes:
+            nodes_in_layers[node.layer] += 1
+
+        # Create a dictionary containing the number of Nodes in front of a layer
+        nodes_in_front = {sum([nodes_in_layers[i] for i in range(layer + 1, self.layers)]) for layer in range(self.layers)}
+
+        # Compute the number of connections a fully connected NN would have
+        max_connections = 0
+        for layer in range(self.layers):
+            max_connections += nodes_in_front[layer] * nodes_in_layers[layer]
+
+        return max_connections == len(self.connections)
+    
+    def add_connection(self) -> None:
+        pass
+
+    def add_node(self) -> None:
+        pass
 
     def prepare_network(self) -> None:
         """Prepare the list of Nodes to be used as a NN."""
