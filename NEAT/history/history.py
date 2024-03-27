@@ -1,4 +1,4 @@
-from NEAT.innovation import Innovation
+from NEAT.history.innovation import Innovation
 from NEAT.genome import Genome
 from NEAT.genome.node import Node
 
