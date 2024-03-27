@@ -12,31 +12,37 @@ class Genome:
     bewtween them."""
 
     def __init__(self, input_count: int, output_count: int) -> None:
-        """Initialise the lists of Nodes and Connections.
-        
-        Populate the list of Nodes with the required amount of (connectionless) 
-        Nodes with no activation function.
-        """
+        """Initialise the lists of Nodes and Connections."""
         
         self.nodes: list[Node] = []
         self.connections: list[Connection] = []
-        self.layers: int = 2
+        self.layers: int
+        self.input_count: int = input_count
         self.output_count: int = output_count
+        self.bias_node_idx: int
+
+    @classmethod
+    def new(cls, input_count: int, output_count: int) -> Genome:
+        """Return a Genome with the list of Nodes populated with the right amount of 
+        (connectionless) input, bias and output Nodes."""
+
+        genome = cls(input_count, output_count)
+        genome.layers = 2
 
         # Add input Nodes
         for _ in range(input_count):
-            node = Node(number=self.next_node, layer=0)
-            self.nodes.append(node)
+            node = Node(number=genome.next_node, layer=0)
+            genome.nodes.append(node)
 
         # Add bias Node
-        self.bias_node_idx = self.next_node
-        node = Node(number=self.bias_node_idx, layer=0)
-        self.nodes.append(node)
+        genome.bias_node_idx = genome.next_node
+        node = Node(number=genome.bias_node_idx, layer=0)
+        genome.nodes.append(node)
 
         # Add output Nodes
         for _ in range(output_count):
-            node = Node(number=self.next_node, layer=1)
-            self.nodes.append(node)
+            node = Node(number=genome.next_node, layer=1)
+            genome.nodes.append(node)
 
     @property
     def next_node(self) -> int:
@@ -135,6 +141,28 @@ class Genome:
 
         # Return the output Node output values
         return tuple([node.output for node in self.nodes[len(self.nodes) - self.output_count:]])
+    
+    def clone(self) -> Genome:
+        """Return a copy of this Genome."""
+
+        clone = self.__class__(self.input_count, self.output_count)
+
+        # Add clones of Nodes
+        for node in self.nodes:
+            clone.nodes.append(node.clone())
+
+        # Add copies of Connections so they connect the new Nodes
+        nodes_dict = {node.number: node for node in clone.nodes}
+        for connection in self.connections:
+            from_node = nodes_dict[connection.from_node.number]
+            to_node = nodes_dict[connection.to_node.number]
+            clone.connections.append(connection.clone(from_node, to_node))
+
+        clone.layers = self.layers
+        clone.bias_node_idx = self.bias_node_idx
+        
+        return clone
+            
 
     def __repr__(self) -> str:
         """Return representation of this Genome."""

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from NEAT.genome.connection import Connection
 from NEAT.genome.activation_functions import ActivationFunction, linear
 
@@ -24,6 +26,10 @@ class Node:
         for connection in self.output_connections:
             if connection.enabled:
                 connection.to_node.input += output * connection.weight
+
+    def clone(self) -> Node:
+        """Return a copy of this Node."""
+        return self.__class__(self.number, self.layer, self.activation)
 
     def __repr__(self) -> str:
         """Return representation of this Node."""

@@ -26,6 +26,13 @@ class Connection:
 
         weight = random.uniform(-1, 1)
         return cls(from_node, to_node, weight, innovation_number)
+    
+    def clone(self, from_node: Node, to_node: Node) -> Connection:
+        """Return a copy of this Connection but with different Nodes.
+        
+        This is so we can clone Nodes and then form new Connections between the cloned Nodes.
+        """
+        return self.__class__(from_node, to_node, self.weight, self.innovation_number, self.enabled)
 
     def __repr__(self) -> str:
         """Return representation of this Connection."""
