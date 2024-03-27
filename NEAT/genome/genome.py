@@ -3,6 +3,7 @@ from typing import Iterable
 
 from NEAT.genome.node import Node
 from NEAT.genome.connection import Connection
+from NEAT.genome.activation_functions import ActivationFunction
 from NEAT.history import History
 
 
@@ -61,23 +62,44 @@ class Genome:
 
         return max_connections == len(self.connections)
     
-    def add_connection(self, from_node: Node, to_node: Node, innovation_number: int, weight: float | None = None) -> None:
-        """Add a Connection between the specified Nodes and with the given innovation number.
+    def add_connection(self, from_node: Node, to_node: Node, history: History, weight: float | None = None) -> None:
+        """Add a Connection between the specified Nodes.
         
         If weight is given then the new Connection will have that weight, otherwise it will be 
         assigned a new random weight.
         """
-        
+
+        innovation_number = history.get_innovation_number(self, from_node, to_node)
         if weight:
             new_connection = Connection(from_node, to_node, weight, innovation_number)
         else:
             new_connection = Connection.random_weight(from_node, to_node, innovation_number)
         self.connections.append(new_connection)
 
-    def add_node(self, connection: Connection, history: History) -> None:
+    def add_node(self, connection: Connection, activation_function: ActivationFunction, history: History) -> None:
         """Disable the given Connection and then insert a Node inbetween the previous from- and 
-        to-Nodes and add new Connections between them."""
-        pass
+        to-Nodes and add new Connections between them.
+        
+        The new Node will have the given activation function.
+        """
+        
+        connection.enabled = False
+
+        # Increment Node layer numbers if there is no space for a new Node
+        if connection.to_node - connection.from_node == 1:
+            for node in self.nodes:
+                if node.layer > connection.from_node.layer:
+                    node.layer += 1
+                self.layers += 1
+
+        # Create a new Node one layer on from the from_node
+        new_node = Node(self.next_node, connection.from_node.layer + 1, activation_function)
+        self.nodes.append(new_node)
+
+        # Connect to the original Nodes and the bias Node
+        self.add_connection(connection.from_node, new_node, history, weight=1)
+        self.add_connection(new_node, connection.to_node, history)
+        self.add_connection(self.nodes[self.bias_node_idx], new_node, history, weight=0)
 
     def prepare_network(self) -> None:
         """Prepare the list of Nodes to be used as a NN."""
