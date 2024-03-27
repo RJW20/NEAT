@@ -3,6 +3,7 @@ from typing import Iterable
 
 from NEAT.genome.node import Node
 from NEAT.genome.connection import Connection
+from NEAT.history import History
 
 
 class Genome:
@@ -60,10 +61,22 @@ class Genome:
 
         return max_connections == len(self.connections)
     
-    def add_connection(self) -> None:
-        pass
+    def add_connection(self, from_node: Node, to_node: Node, innovation_number: int, weight: float | None = None) -> None:
+        """Add a Connection between the specified Nodes and with the given innovation number.
+        
+        If weight is given then the new Connection will have that weight, otherwise it will be 
+        assigned a new random weight.
+        """
+        
+        if weight:
+            new_connection = Connection(from_node, to_node, weight, innovation_number)
+        else:
+            new_connection = Connection.random_weight(from_node, to_node, innovation_number)
+        self.connections.append(new_connection)
 
-    def add_node(self) -> None:
+    def add_node(self, connection: Connection, history: History) -> None:
+        """Disable the given Connection and then insert a Node inbetween the previous from- and 
+        to-Nodes and add new Connections between them."""
         pass
 
     def prepare_network(self) -> None:
