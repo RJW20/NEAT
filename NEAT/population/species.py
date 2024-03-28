@@ -6,25 +6,34 @@ class Species:
     """Contains a large group of Players that have similar Genomes.
     
     A Species' rep will always be the Genome of the Player in the Species that obtained the 
-    best fitness in the previous generation.
+    best fitness in the previous generations.
     The staleness of a species counts how many generations have gone without any improvement in the 
     best fitness.
     """
 
     def __init__(self, player: BasePlayer, **settings: dict) -> None:
 
-        # When creating a new Species the Player will always be the best of its Species 
-        # as we speciate in descending fitness order
+        # When creating a new Species the given Player will always be the only option
+        # for a rep 
         self.rep: Genome = player.genome.clone()
         self.players: list[BasePlayer] = list(player)
 
         self.staleness: int = 0
+        self.best_fitness: int = 0
 
         # Unload the settings
         self._c1 = settings['c1']
         self._c2 = settings['c2']
         self._c3 = settings['c3']
         self._delta = settings['delta']
+
+    @property
+    def champ(self) -> BasePlayer:
+        """Return the Player in the Species with the highest fitness.
+        
+        Should only be called after the Players have been ranked.
+        """
+        return self.players[0]
 
     def excess_and_disjoint(self, genome: Genome) -> tuple[int, int]:
         """Return the number of excess and disjoint genes the given Genome has with this 
@@ -73,3 +82,16 @@ class Species:
                         self._c3 * average_weight_difference
         
         return compatibility < self._delta
+    
+    def rank_players(self) -> None:
+        """Sort the Players in the Species by fitness in descending order."""
+
+        self.players.sort(key = lambda player: player.fitness, reverse=True)
+
+        # Check for improvement
+        if self.champ.fitness > self.best_fitness:
+            self.staleness = 0
+            self.best_fitness = self.champ.fitness
+            self.rep = self.champ.genome.clone()
+        else:
+            self.staleness += 1

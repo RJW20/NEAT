@@ -46,6 +46,14 @@ class Population:
                 )
                 self.species.append(new_species)
 
+    def rank_species(self) -> None:
+        """Sort the Species in the Population by their best fitness in descending order."""
+
+        for specie in self.species:
+            specie.rank_players()
+
+        self.species.sort(key = lambda specie: specie.best_fitness, reverse=True)
+
     def evovle(self) -> None:
         """Evolve the Population of Players."""
 
