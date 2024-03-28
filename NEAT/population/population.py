@@ -10,6 +10,7 @@ class Population:
     """
 
     def __init__(self, settings: dict) -> None:
+        self.generation: int
         self.players: list[BasePlayer]
         self.species: list[Species]
         self.history: list[History]
@@ -54,11 +55,29 @@ class Population:
 
         self.species.sort(key = lambda specie: specie.best_fitness, reverse=True)
 
-    def evovle(self) -> None:
-        """Evolve the Population of Players."""
+    def cull(self) -> None:
+        """Remove all but top percentage of Players in each Species."""
 
-        # Simulate all the Players
+    def remove_stale_species(self) -> None:
+        """Remove Species which haven't improved for too many generations."""
+
+    def remove_bad_species(self) -> None:
+        """Remove Species which are deemed too bad to reproduce."""
+
+    def repopulate(self) -> None:
+        """"""
+
+    def natural_selection(self) -> None:
+        """Create the next generation of Players."""
 
         # Speciate
+
+        # Rank
+
+        # Save playback
+
+        # Cull
+
+        # Save parents for reloading
 
         # Repopulate
