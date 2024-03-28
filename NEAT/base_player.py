@@ -1,7 +1,9 @@
+from abc import ABC
+
 from NEAT.genome import Genome
 
 
-class BasePlayer:
+class BasePlayer(ABC):
     """Base class for a Player.
     
     Designed to be extended when using this package.
