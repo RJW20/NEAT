@@ -17,6 +17,8 @@ class Population:
 
         # Unload the settings
         try:
+            self._size = settings['population_size']
+
             self._excess_coefficient = settings['excess_coefficient']
             self._disjoint_coefficient = settings['disjoint_coefficient']
             self._weight_difference_coefficient = settings['weight_difference_coefficient']
@@ -26,6 +28,11 @@ class Population:
             self._max_specie_staleness = settings['max_specie_staleness']
         except KeyError as e:
             print(f'Setting {e.args[0]} not found in settings.')
+
+    @property
+    def total_adjusted_fitness(self) -> float:
+        """Return the total adjusted fitness of Players in all Species."""
+        return sum([specie.total_adjusted_fitness for specie in self.species]) if self.species else .0
 
     def speciate(self) -> None:
         """Split the players into Species.
@@ -75,30 +82,46 @@ class Population:
         in the calculation for number of offspring per species.
         """
 
-        total_population_adjusted_fitness = sum([specie.total_adjusted_fitness for specie in self.species])
-        self.species =  [specie for specie in self.species if 
-                         specie.total_adjusted_fitness / total_population_adjusted_fitness >= 1]
+        total_population_adjusted_fitness = self.total_adjusted_fitness
+        self.species =  [specie for specie in self.species if (specie.total_adjusted_fitness /
+                         total_population_adjusted_fitness) * self._size >= 1]
 
     def repopulate(self) -> None:
-        """"""
+        """Fill self.players with the next generation."""
+
+        total_population_adjusted_fitness = self.total_adjusted_fitness
+        for specie in self.species:
+
+            # Get the number of offspring this Species is allocated
+            offspring_count = (specie.total_adjusted_fitness / total_population_adjusted_fitness) * self._size
+
+            # Insert a clone of the champion if applicable
+            if specie.size > 5:
+                #insert clone of the champion here
+                offspring_count -= 1
+
+            # Cut Species down to only Players we want to breed from
+            specie.cull(self._cull_percentage)
+
+            # Generate the offspring and insert into the Population
+            for _ in range(offspring_count):
+                pass
 
     def natural_selection(self) -> None:
-        """Create the next generation of Players."""
+        """Select the Players to generate offspring from and then create the next 
+        generation of Players."""
 
-        # Speciate
-
-        # Rank
-
-        # Fitness Share
+        self.speciate()
+        self.rank_species()
+        self.fitness_share()
 
         # Save playback
 
-        # Remove any Species that are stale or too bad
+        self.remove_stale_species()
+        self.remove_stale_species()
 
         # Save parents for reloading
 
-        # Repopulate
-        ## Calculate the total adjusted fitness
-        ## Calculate how many children
-        ## Cull
-        ## Get offspring
+        self.repopulate()
+
+        self.generation += 1
