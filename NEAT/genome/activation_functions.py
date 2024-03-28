@@ -5,7 +5,9 @@ from typing import Callable, Literal
 type ActivationFunction = Callable[[float], float]
 
 def sigmoid(x: float) -> float:
-    return 1.0 / (1.0 + math.exp(-x))
+    # Use modified sigmoid that is optimized to be close to linear between activations
+    # -0.5 and 0.5
+    return 1.0 / (1.0 + math.exp(-4.9*x))
 
 def relu(x: float) -> float:
     return max(0, x)
