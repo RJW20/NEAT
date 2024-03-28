@@ -64,12 +64,6 @@ class Population:
         for specie in self.species:
             specie.fitness_share()
 
-    def cull(self) -> None:
-        """Remove all but top percentage of Players in each Species."""
-
-        for specie in self.species:
-            specie.cull(self._cull_percentage)
-
     def remove_stale_species(self) -> None:
         """Remove Species which haven't improved for too many generations."""
         self.species = [specie for specie in self.species if specie.staleness < self._max_specie_staleness]
@@ -95,12 +89,16 @@ class Population:
 
         # Rank
 
-        # Fitness Share/Calculate adjusted fitnesses
+        # Fitness Share
 
         # Save playback
 
-        # Cull
+        # Remove any Species that are stale or too bad
 
         # Save parents for reloading
 
         # Repopulate
+        ## Calculate the total adjusted fitness
+        ## Calculate how many children
+        ## Cull
+        ## Get offspring

@@ -43,7 +43,7 @@ class Species:
     @property
     def total_adjusted_fitness(self) -> float:
         """Return the total adjusted fitness of Players in this Species."""
-        return sum([player.fitness for player in self.players]) if self.size else .0
+        return sum([player.adjusted_fitness for player in self.players]) if self.size else .0
 
     def excess_and_disjoint(self, genome: Genome) -> tuple[int, int]:
         """Return the number of excess and disjoint genes the given Genome has with this 
