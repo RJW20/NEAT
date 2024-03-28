@@ -27,7 +27,7 @@ class Species:
         self._delta = settings['delta']
 
     def excess_and_disjoint(self, genome: Genome) -> tuple[int, int]:
-        """Return the number of excess and disjoint genes the genome has with this 
+        """Return the number of excess and disjoint genes the given Genome has with this 
         Species' rep."""
 
         # Get self.rep's innovation numbers
