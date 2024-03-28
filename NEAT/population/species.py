@@ -29,11 +29,21 @@ class Species:
 
     @property
     def champ(self) -> BasePlayer:
-        """Return the Player in the Species with the highest fitness.
+        """Return the Player in this Species with the highest fitness.
         
         Should only be called after the Players have been ranked.
         """
         return self.players[0]
+    
+    @property
+    def size(self) -> int:
+        """Return the number of Players in this Species."""
+        return len(self.players)
+    
+    @property
+    def total_adjusted_fitness(self) -> float:
+        """Return the total adjusted fitness of Players in this Species."""
+        return sum([player.fitness for player in self.players]) if self.size else .0
 
     def excess_and_disjoint(self, genome: Genome) -> tuple[int, int]:
         """Return the number of excess and disjoint genes the given Genome has with this 
@@ -95,3 +105,16 @@ class Species:
             self.rep = self.champ.genome.clone()
         else:
             self.staleness += 1
+
+    def fitness_share(self) -> None:
+        """Compute the adjusted fitness for each Player in this Species."""
+        
+        specie_size = self.size
+        for player in self.players:
+            player.adjusted_fitness = player.fitness / specie_size
+
+    def cull(self, cull_percentage: float) -> None:
+        """Remove the bottom cull_percentage of Players in this Species."""
+
+        remaining = max(int((1 - cull_percentage) * self.size), 1)
+        self.players = self.players[:remaining]

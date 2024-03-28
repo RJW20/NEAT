@@ -4,7 +4,7 @@ from NEAT.history.history import History
 
 
 class Population:
-    """Contains all the different Species.
+    """Contains Species of Players.
     
     Must be initiated with a settings dictionary as found in the documentation.
     """
@@ -21,6 +21,9 @@ class Population:
             self._disjoint_coefficient = settings['disjoint_coefficient']
             self._weight_difference_coefficient = settings['weight_difference_coefficient']
             self._compatibility_threshold = settings['compatibility_threshold']
+
+            self._cull_percentage = settings['cull_percentage']
+            self._max_specie_staleness = settings['max_specie_staleness']
         except KeyError as e:
             print(f'Setting {e.args[0]} not found in settings.')
 
@@ -55,14 +58,32 @@ class Population:
 
         self.species.sort(key = lambda specie: specie.best_fitness, reverse=True)
 
+    def fitness_share(self) -> None:
+        """Compute the adjusted fitness for each Player in each Species."""
+
+        for specie in self.species:
+            specie.fitness_share()
+
     def cull(self) -> None:
         """Remove all but top percentage of Players in each Species."""
 
+        for specie in self.species:
+            specie.cull(self._cull_percentage)
+
     def remove_stale_species(self) -> None:
         """Remove Species which haven't improved for too many generations."""
+        self.species = [specie for specie in self.species if specie.staleness < self._max_specie_staleness]
 
     def remove_bad_species(self) -> None:
-        """Remove Species which are deemed too bad to reproduce."""
+        """Remove Species which are deemed too bad to reproduce.
+        
+        More specifically remove the Species which will be assigned fewer than one child 
+        in the calculation for number of offspring per species.
+        """
+
+        total_population_adjusted_fitness = sum([specie.total_adjusted_fitness for specie in self.species])
+        self.species =  [specie for specie in self.species if 
+                         specie.total_adjusted_fitness / total_population_adjusted_fitness >= 1]
 
     def repopulate(self) -> None:
         """"""
@@ -73,6 +94,8 @@ class Population:
         # Speciate
 
         # Rank
+
+        # Fitness Share/Calculate adjusted fitnesses
 
         # Save playback
 
