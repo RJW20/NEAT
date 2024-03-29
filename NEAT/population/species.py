@@ -1,4 +1,6 @@
-from NEAT.baseplayer import BasePlayer
+import random
+
+from NEAT.base_player import BasePlayer
 from NEAT.genome import Genome
 
 
@@ -11,7 +13,7 @@ class Species:
     best fitness.
     """
 
-    def __init__(self, player: BasePlayer, **settings: dict) -> None:
+    def __init__(self, player: BasePlayer, settings: dict) -> None:
 
         # When creating a new Species the given Player will always be the only option
         # for a rep 
@@ -22,10 +24,14 @@ class Species:
         self.best_fitness: int = 0
 
         # Unload the settings
-        self._c1 = settings['c1']
-        self._c2 = settings['c2']
-        self._c3 = settings['c3']
-        self._delta = settings['delta']
+        try: 
+            self._c1 = settings['excess_coefficient']
+            self._c2 = settings['disjoint_coefficient']
+            self._c3 = settings['weight_difference_coefficient']
+            self._delta = settings['compatibility_threshold']
+            self._max_staleness = settings['max_staleness']
+        except KeyError as e:
+            raise Exception(f'Setting {e.args[0]} not found in species_settings.')
 
     @property
     def champ(self) -> BasePlayer:
@@ -44,19 +50,20 @@ class Species:
     def total_adjusted_fitness(self) -> float:
         """Return the total adjusted fitness of Players in this Species."""
         return sum([player.adjusted_fitness for player in self.players]) if self.size else .0
+    
+    @property
+    def gone_stale(self) -> bool:
+        """Return True if no improvements have been made for too many generations."""
+        return self.staleness >= self._max_staleness
 
     def excess_and_disjoint(self, genome: Genome) -> tuple[int, int]:
         """Return the number of excess and disjoint genes the given Genome has with this 
         Species' rep."""
 
-        # Get self.rep's innovation numbers
-        rep_innovation_numbers = self.rep.innovation_numbers
-        rep_max_innovation_number = max(rep_innovation_numbers)
-
-        # Count the excess and disjoint connections in the Genome we are testing
         excess, disjoint = 0, 0
+        rep_max_innovation_number = max(self.rep.innovation_numbers)
         for connection in genome.connections:
-            if connection.innovation_number not in rep_innovation_numbers:
+            if connection.innovation_number not in self.rep.innovation_numbers:
                 if connection.innovation_number > rep_max_innovation_number:
                     excess += 1
                 else:
@@ -74,6 +81,7 @@ class Species:
                 if connection1.innovation_number == connection2.innovation_number:
                     matching += 1
                     total_difference += abs(connection1.weight - connection2.weight)
+                    break
 
         return total_difference/matching if matching else 100
 
@@ -95,10 +103,11 @@ class Species:
     
     def rank_players(self) -> None:
         """Sort the Players in the Species by fitness in descending order."""
-
         self.players.sort(key = lambda player: player.fitness, reverse=True)
 
-        # Check for improvement
+    def check_progress(self) -> None:
+        """Check if this Species is improving."""
+
         if self.champ.fitness > self.best_fitness:
             self.staleness = 0
             self.best_fitness = self.champ.fitness

@@ -1,45 +1,47 @@
 from NEAT.base_player import BasePlayer
 from NEAT.population.species import Species
-from NEAT.history.history import History
+from NEAT.player_factory import PlayerFactory
 
 
 class Population:
-    """Contains Species of Players."""
+    """Contains Species of Players.
+    
+    Must be initiated with a settings dictionary as found in the documentation.
+    """
 
-    def __init__(
-        self,
-        PlayerClass: type,
-        player_args: dict,
-        NEAT_settings: dict,
-        playback_settings: dict,
-    ) -> None:
+    def __init__(self, PlayerClass: type, settings: dict) -> None:
         self.generation: int
         self.players: list[BasePlayer]
         self.species: list[Species]
-        self.history: list[History]
 
         self.staleness: int = 0
         self.best_fitness: int = 0
 
+        self._PlayerClass = PlayerClass
+
         # Unload the settings
         try:
-            self._PlayerClass = PlayerClass
-            self._player_args = player_args
+            self._player_args = settings['player_args']
+            self._genome_args = settings['genome_args']
 
+            NEAT_settings = settings['NEAT_settings']
             self._size = NEAT_settings['population_size']
-
-            self._excess_coefficient = NEAT_settings['excess_coefficient']
-            self._disjoint_coefficient = NEAT_settings['disjoint_coefficient']
-            self._weight_difference_coefficient = NEAT_settings['weight_difference_coefficient']
-            self._compatibility_threshold = NEAT_settings['compatibility_threshold']
-
             self._cull_percentage = NEAT_settings['cull_percentage']
-            self._max_specie_staleness = NEAT_settings['max_specie_staleness']
-
             self._max_staleness = NEAT_settings['max_population_staleness']
+            self._species_settings = NEAT_settings['species_settings']
+            self._reproduction_settings = NEAT_settings['reproduction_settings']
+
+            self._playback_settings = settings['playback_settings']    
 
         except KeyError as e:
-            print(f'Setting {e.args[0]} not found in NEAT_settings.')
+            raise Exception(f'Setting {e.args[0]} not found in settings.')
+        
+        self.player_factory: PlayerFactory = PlayerFactory(
+            PlayerClass = PlayerClass,
+            player_args = self._player_args,
+            genome_args = self._genome_args,
+            reproduction_settings = self._reproduction_settings,
+        )
 
     @property
     def total_adjusted_fitness(self) -> float:
@@ -65,13 +67,7 @@ class Population:
                     species_found = True
 
             if not species_found:
-                new_species = Species(
-                    player = player,
-                    c1 = self._excess_coefficient,
-                    c2 = self._disjoint_coefficient,
-                    c3 = self._weight_difference_coefficient,
-                    delta = self._compatibility_threshold
-                )
+                new_species = Species(player, self._species_settings)
                 self.species.append(new_species)
 
     def rank_species(self) -> None:
@@ -102,7 +98,7 @@ class Population:
 
     def remove_stale_species(self) -> None:
         """Remove Species which haven't improved for too many generations."""
-        self.species = [specie for specie in self.species if specie.staleness < self._max_specie_staleness]
+        self.species = [specie for specie in self.species if not specie.gone_stale]
 
     def remove_bad_species(self) -> None:
         """Remove Species which are deemed too bad to reproduce.
@@ -130,14 +126,19 @@ class Population:
             # Get the number of offspring this Species is allocated
             offspring_count = int((specie.total_adjusted_fitness / total_population_adjusted_fitness) * self._size)
 
-            # Check if specie is large enough to include a clone of its champ
-            clone_champ = True if specie.size > 5 else False
+            # Insert a clone of the Species if applicable
+            if specie.size > 5:
+                self.players.append(self.player_factory.clone(specie.champ))
+                offspring_count -= 1
 
-            # Cut Species down to only Players we want to breed from
-            self.cull(self._cull_percentage)
+            # Cut the Species down to only Players we want to breed from
+            specie.cull(self._cull_percentage)
 
             # Get the Species' offspring
-            offspring = specie.generate_offspring(offspring_count, clone_champ)
+            offspring = self.player_factory.generate_offspring(
+                parents = specie.players,
+                total = offspring_count,
+            )
 
             # Add offspring to self.players
             self.players.extend(offspring)
@@ -145,7 +146,7 @@ class Population:
             # Clear the Species
             specie.players = []
 
-    def natural_selection(self) -> None:
+    def evolve(self) -> None:
         """Select the best performing Players from this generation and use them to 
         create the next generation."""
 
@@ -156,7 +157,7 @@ class Population:
 
         # Save playback
 
-        if not self.gone_stale():
+        if not self.gone_stale:
             self.remove_stale_species()
             self.remove_bad_species()
         else:
