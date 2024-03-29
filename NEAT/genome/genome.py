@@ -21,29 +21,6 @@ class Genome:
         self.output_count: int = output_count
         self.bias_node_idx: int
 
-    @classmethod
-    def new(cls, input_count: int, output_count: int) -> Genome:
-        """Return a Genome with the list of Nodes populated with the right amount of 
-        (connectionless) input, bias and output Nodes."""
-
-        genome = cls(input_count, output_count)
-        genome.layers = 2
-
-        # Add input Nodes
-        for _ in range(input_count):
-            node = Node(number=genome.next_node, layer=0)
-            genome.nodes.append(node)
-
-        # Add bias Node
-        genome.bias_node_idx = genome.next_node
-        node = Node(number=genome.bias_node_idx, layer=0)
-        genome.nodes.append(node)
-
-        # Add output Nodes
-        for _ in range(output_count):
-            node = Node(number=genome.next_node, layer=1)
-            genome.nodes.append(node)
-
     @property
     def innovation_numbers(self) -> set:
         """Return the innovation numbers found in the this Genome's Connections."""
@@ -72,6 +49,34 @@ class Genome:
             max_connections += nodes_in_front[layer] * nodes_in_layers[layer]
 
         return max_connections == len(self.connections)
+    
+    @classmethod
+    def new(cls, input_count: int, output_count: int, history: History) -> Genome:
+        """Return a Genome with a list of Nodes containing the input, bias and output Nodes, 
+        and a list of (random) Connections between them."""
+
+        genome = cls(input_count, output_count)
+        genome.layers = 2
+
+        # Add input Nodes
+        for _ in range(input_count):
+            node = Node(number=genome.next_node, layer=0)
+            genome.nodes.append(node)
+
+        # Add bias Node
+        genome.bias_node_idx = genome.next_node
+        node = Node(number=genome.bias_node_idx, layer=0)
+        genome.nodes.append(node)
+
+        # Add output Nodes
+        for _ in range(output_count):
+            node = Node(number=genome.next_node, layer=1)
+            genome.nodes.append(node)
+
+        # Fully connect the network
+        for from_node in genome.nodes[:genome.bias_node_idx + 1]:
+            for to_node in genome.nodes[genome.bias_node_idx + 1:]:
+                genome.add_connection(from_node, to_node, history)
     
     def add_connection(self, from_node: Node, to_node: Node, history: History, weight: float | None = None) -> None:
         """Add a Connection between the specified Nodes.
