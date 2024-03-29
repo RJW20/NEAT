@@ -17,7 +17,6 @@ class PlayerFactory:
         genome_args: dict,
         reproduction_settings: dict,
     ) -> None:
-        self.history: list[History]
         self.PlayerClass: type = PlayerClass
         self.player_args: dict = player_args
         self.genome_args: dict = genome_args
@@ -27,16 +26,18 @@ class PlayerFactory:
         except KeyError as e:
             raise Exception(f'Setting {e.args[0]} not found in reproduction_settings.')
         
-    def new_players(self, total: int) -> list[BasePlayer]:
+    def new_players(self, total: int, history: History) -> list[BasePlayer]:
         """Return a list of length total consisting of Players which have random Genomes."""
-        return [
-            Genome.new(
+
+        players = [self.PlayerClass(self.player_args) for _ in range(total)]
+        for player in players:
+            player.genome = Genome.new(
                 input_count = self.genome_args['input_count'],
                 output_count = self.genome_args['output_count'],
-                history = self.history,
+                history = history,
             )
-            for _ in range(total)
-        ]
+
+        return players
 
     def clone(self, player: BasePlayer):
         """Return a new Player with the given Player's Genome."""
@@ -45,7 +46,7 @@ class PlayerFactory:
         clone.genome = player.genome.clone()
         return clone
     
-    def generate_offspring(self, parents: list[BasePlayer], total: int) -> list[BasePlayer]:
+    def generate_offspring(self, parents: list[BasePlayer], total: int, history: History) -> list[BasePlayer]:
         """Return a list of length total consisting of Players that are the offspring of 
         the given parents."""
 
@@ -54,10 +55,13 @@ class PlayerFactory:
         # Generate the offspring
         while len(offspring) < total:
 
-            # Get a child as either a clone or a crossover
+            # Get a child as either a crossover or a clone
             if random.uniform(0,1) < self.crossover_rate:
                 [parent1, parent2] = fitness_weighted_selection(parents, 2)
-                child = crossover(parent1, parent2)
+                if parent1.fitness < parent2.fitness:
+                    parent1, parent2 = parent2, parent1
+                child = self.PlayerClass(self.player_args)
+                child = crossover(parent1.genome, parent2.genome)
             else:
                 [parent] = fitness_weighted_selection(parents, 1)
                 child = parent.clone(self.player_args)

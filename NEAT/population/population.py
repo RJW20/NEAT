@@ -1,5 +1,6 @@
 from NEAT.base_player import BasePlayer
 from NEAT.population.species import Species
+from NEAT.history import History
 from NEAT.player_factory import PlayerFactory
 
 
@@ -13,25 +14,24 @@ class Population:
         self.generation: int
         self.players: list[BasePlayer]
         self.species: list[Species]
+        self.history: list[History]
 
         self.staleness: int = 0
         self.best_fitness: int = 0
 
-        self._PlayerClass = PlayerClass
-
         # Unload the settings
         try:
-            self._player_args = settings['player_args']
-            self._genome_args = settings['genome_args']
+            self._player_args: dict = settings['player_args']
+            self._genome_args: dict = settings['genome_args']
 
             NEAT_settings = settings['NEAT_settings']
-            self._size = NEAT_settings['population_size']
-            self._cull_percentage = NEAT_settings['cull_percentage']
-            self._max_staleness = NEAT_settings['max_population_staleness']
-            self._species_settings = NEAT_settings['species_settings']
-            self._reproduction_settings = NEAT_settings['reproduction_settings']
+            self._size: int = NEAT_settings['population_size']
+            self._cull_percentage: float = NEAT_settings['cull_percentage']
+            self._max_staleness: int = NEAT_settings['max_population_staleness']
+            self._species_settings: dict = NEAT_settings['species_settings']
+            self._reproduction_settings: dict = NEAT_settings['reproduction_settings']
 
-            self._playback_settings = settings['playback_settings']    
+            self._playback_settings: dict = settings['playback_settings']    
 
         except KeyError as e:
             raise Exception(f'Setting {e.args[0]} not found in settings.')
@@ -138,6 +138,7 @@ class Population:
             offspring = self.player_factory.generate_offspring(
                 parents = specie.players,
                 total = offspring_count,
+                history = self.history
             )
 
             # Add offspring to self.players
