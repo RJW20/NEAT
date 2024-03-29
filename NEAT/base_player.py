@@ -14,10 +14,3 @@ class BasePlayer(ABC):
         self.fitness: float
         self.adjusted_fitness: float
         self.genome: Genome
-
-    def clone(self, player_args: dict) -> BasePlayer:
-        """Return a BasePlayer with this BasePlayer's Genome."""
-
-        clone = self.__class__(player_args)
-        clone.genome = self.genome.clone()
-        return clone
