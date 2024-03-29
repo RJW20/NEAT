@@ -1,7 +1,7 @@
 from NEAT.base_player import BasePlayer
 from NEAT.population.species import Species
 from NEAT.history import History
-from NEAT.player_factory import PlayerFactory
+from NEAT.population.player_factory import PlayerFactory
 
 
 class Population:
