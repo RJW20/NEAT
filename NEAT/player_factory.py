@@ -56,10 +56,10 @@ class PlayerFactory:
 
             # Get a child as either a clone or a crossover
             if random.uniform(0,1) < self.crossover_rate:
-                [parent1, parent2] = fitness_weighted_selection(self.players, 2)
+                [parent1, parent2] = fitness_weighted_selection(parents, 2)
                 child = crossover(parent1, parent2)
             else:
-                [parent] = fitness_weighted_selection(self.players, 1)
+                [parent] = fitness_weighted_selection(parents, 1)
                 child = parent.clone(self.player_args)
 
             # Mutate the child
