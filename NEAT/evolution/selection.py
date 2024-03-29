@@ -4,7 +4,8 @@ from NEAT.base_player import BasePlayer
 
 
 def fitness_weighted_selection(parents: list[BasePlayer], total: int) -> list[BasePlayer]:
-    """Picks total parents (with replacement) at a rate proportional to all parents fitness.
+    """Return a list of length total consisting of Players chosen (with parents ) from 
+    the given parents at a rate proportional to all parents' fitness.
 
     Requires all parents have fitness >= 0.
     Requires one parent has fitness > 0.
