@@ -57,7 +57,7 @@ class Species:
         return self.staleness >= self._max_staleness
 
     def excess_and_disjoint(self, genome: Genome) -> tuple[int, int]:
-        """Return the number of excess and disjoint genes the given Genome has with this 
+        """Return the number of excess and disjoint Connections the given Genome has with this 
         Species' rep."""
 
         excess, disjoint = 0, 0
