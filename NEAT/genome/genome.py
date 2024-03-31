@@ -12,14 +12,12 @@ class Genome:
     bewtween them."""
 
     def __init__(self, input_count: int, output_count: int) -> None:
-        """Initialise the lists of Nodes and Connections."""
-        
         self.nodes: list[Node] = []
         self.connections: list[Connection] = []
         self.layers: int
         self.input_count: int = input_count
         self.output_count: int = output_count
-        self.bias_node_idx: int
+        self.bias_node_idx: int = input_count
 
     @property
     def innovation_numbers(self) -> set:
@@ -49,6 +47,17 @@ class Genome:
             max_connections += nodes_in_front[layer] * nodes_in_layers[layer]
 
         return max_connections == len(self.connections)
+
+    @property
+    def nodes_dict(self) -> dict:
+        """Return this Genome's Nodes as a dictionary with their numbers as the keys."""
+        return {node.number: node for node in self.nodes}
+    
+    @property
+    def connections_dict(self) -> dict:
+        """Return this Genome's Connections as a dictionary with their innovation numbers 
+        as the keys."""
+        return {connection.innovation_number: connection for connection in self.connections}
     
     @classmethod
     def new(cls, input_count: int, output_count: int, history: History) -> Genome:
@@ -64,7 +73,6 @@ class Genome:
             genome.nodes.append(node)
 
         # Add bias Node
-        genome.bias_node_idx = genome.next_node
         node = Node(number=genome.bias_node_idx, layer=0)
         genome.nodes.append(node)
 
@@ -162,7 +170,7 @@ class Genome:
             clone.nodes.append(node.clone())
 
         # Add copies of Connections so they connect the new Nodes
-        nodes_dict = {node.number: node for node in clone.nodes}
+        nodes_dict = clone.nodes_dict
         for connection in self.connections:
             from_node = nodes_dict[connection.from_node.number]
             to_node = nodes_dict[connection.to_node.number]
