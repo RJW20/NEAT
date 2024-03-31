@@ -49,12 +49,12 @@ class Genome:
         return max_connections == len(self.connections)
 
     @property
-    def nodes_dict(self) -> dict:
+    def nodes_dict(self) -> dict[int, Node]:
         """Return this Genome's Nodes as a dictionary with their numbers as the keys."""
         return {node.number: node for node in self.nodes}
     
     @property
-    def connections_dict(self) -> dict:
+    def connections_dict(self) -> dict[int, Connection]:
         """Return this Genome's Connections as a dictionary with their innovation numbers 
         as the keys."""
         return {connection.innovation_number: connection for connection in self.connections}
@@ -170,10 +170,10 @@ class Genome:
             clone.nodes.append(node.clone())
 
         # Add copies of Connections so they connect the new Nodes
-        nodes_dict = clone.nodes_dict
+        clone_nodes = clone.nodes_dict
         for connection in self.connections:
-            from_node = nodes_dict[connection.from_node.number]
-            to_node = nodes_dict[connection.to_node.number]
+            from_node = clone_nodes[connection.from_node.number]
+            to_node = clone_nodes[connection.to_node.number]
             clone.connections.append(connection.clone(from_node, to_node))
 
         clone.layers = self.layers
