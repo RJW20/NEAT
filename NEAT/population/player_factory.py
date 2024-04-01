@@ -3,6 +3,7 @@ import random
 from NEAT.base_player import BasePlayer
 from NEAT.genome import Genome
 from NEAT.history import History
+from NEAT.genome.activation_functions import activation_by_name
 from NEAT.evolution import fitness_weighted_selection, crossover, mutate
 
 
@@ -22,7 +23,7 @@ class PlayerFactory:
         self._genome_settings: dict = genome_settings
 
         try:
-            self._hidden_activation = genome_settings['hidden_activation']
+            self._hidden_activation = activation_by_name(genome_settings['hidden_activation'])
         except KeyError as e:
             raise Exception(f'Setting {e.args[0]} not found in genome_settings.')
         
