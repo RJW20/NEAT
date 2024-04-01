@@ -22,7 +22,7 @@ class Population:
         # Unload the settings
         try:
             self._player_args: dict = settings['player_args']
-            self._genome_args: dict = settings['genome_args']
+            self._genome_settings: dict = settings['genome_settings']
 
             NEAT_settings = settings['NEAT_settings']
             self._size: int = NEAT_settings['population_size']
@@ -39,7 +39,7 @@ class Population:
         self.player_factory: PlayerFactory = PlayerFactory(
             PlayerClass = PlayerClass,
             player_args = self._player_args,
-            genome_args = self._genome_args,
+            genome_settings = self._genome_settings,
             reproduction_settings = self._reproduction_settings,
         )
 
