@@ -17,9 +17,9 @@ class PlayerFactory:
         genome_settings: dict,
         reproduction_settings: dict,
     ) -> None:
-        self.PlayerClass: type = PlayerClass
-        self.player_args: dict = player_args
-        self.genome_settings: dict = genome_settings
+        self._PlayerClass: type = PlayerClass
+        self._player_args: dict = player_args
+        self._genome_settings: dict = genome_settings
 
         try:
             self._hidden_activation = genome_settings['hidden_activation']
@@ -39,11 +39,11 @@ class PlayerFactory:
     def new_players(self, total: int, history: History) -> list[BasePlayer]:
         """Return a list of length total consisting of Players which have random Genomes."""
 
-        players = [self.PlayerClass(self.player_args) for _ in range(total)]
+        players = [self._PlayerClass(self._player_args) for _ in range(total)]
         for player in players:
             player.genome = Genome.new(
-                input_count = self.genome_settings['input_count'],
-                output_count = self.genome_settings['output_count'],
+                input_count = self._genome_settings['input_count'],
+                output_count = self._genome_settings['output_count'],
                 history = history,
             )
 
@@ -52,7 +52,7 @@ class PlayerFactory:
     def clone(self, player: BasePlayer):
         """Return a new Player with the given Player's Genome."""
 
-        clone = self.PlayerClass(self.player_args)
+        clone = self._PlayerClass(self._player_args)
         clone.genome = player.genome.clone()
         return clone
     
@@ -70,7 +70,7 @@ class PlayerFactory:
                 [parent1, parent2] = fitness_weighted_selection(parents, 2)
                 if parent1.fitness < parent2.fitness:
                     parent1, parent2 = parent2, parent1
-                child = self.PlayerClass(self.player_args)
+                child = self._PlayerClass(self._player_args)
                 child.genome = crossover(parent1.genome, parent2.genome, self._disabled_rate)
             else:
                 [parent] = fitness_weighted_selection(parents, 1)

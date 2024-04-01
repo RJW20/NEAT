@@ -85,6 +85,8 @@ class Genome:
         for from_node in genome.nodes[:genome.bias_node_idx + 1]:
             for to_node in genome.nodes[genome.bias_node_idx + 1:]:
                 genome.add_connection(from_node, to_node, history)
+
+        return genome
     
     def add_connection(self, from_node: Node, to_node: Node, history: History, weight: float | None = None) -> None:
         """Add a Connection between the specified Nodes.

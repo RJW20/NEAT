@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from NEAT.base_player import BasePlayer
 from NEAT.population.species import Species
 from NEAT.history import History
@@ -12,9 +14,9 @@ class Population:
 
     def __init__(self, PlayerClass: type, settings: dict) -> None:
         self.generation: int
+        self.history: list[History]
         self.players: list[BasePlayer]
         self.species: list[Species]
-        self.history: list[History]
 
         self.staleness: int = 0
         self.best_fitness: int = 0
@@ -52,6 +54,18 @@ class Population:
     def gone_stale(self) -> bool:
         """Return True if no improvements have been made for too many generations."""
         return self.staleness >= self._max_staleness
+    
+    @classmethod
+    def new(cls, PlayerClass: type, settings: dict) -> Population:
+        """Return a new Population with a full list of Players with randomized Genomes."""
+
+        population = cls(PlayerClass, settings)
+        population.generation = 0
+        population.history = []
+        population.players = population.player_factory.new_players(population._size, population.history)
+        population.species = []
+
+        return population
 
     def speciate(self) -> None:
         """Split the players into Species.
