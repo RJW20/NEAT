@@ -1,5 +1,7 @@
 from __future__ import annotations
 from typing import Iterable
+from pathlib import Path, PosixPath
+import pickle
 
 from NEAT.genome.node import Node
 from NEAT.genome.connection import Connection
@@ -182,6 +184,29 @@ class Genome:
         clone.bias_node_idx = self.bias_node_idx
         
         return clone
+
+    def save(self, folder: Path, filename: str) -> None:
+        """Save this Genome instance in the given folder with the given filename using pickle.
+        
+        If a Genome save already exists in the same folder with the same filename it will be 
+        overwritten.
+        """
+
+        destination = folder / f'{filename}.pickle'
+        with destination.open('wb') as dest:
+            pickle.dump(self, dest)
+
+    @classmethod
+    def load(cls, folder: Path, filename: PosixPath) -> Genome:
+        """Create a Genome instance from a pickle dump located in the given folder with the 
+        given filename.
+        
+        Raises a FileNotFoundError exception if the dump does not exist.
+        """
+
+        source = folder / filename
+        with source.open('r+') as src:
+            return pickle.load(src)
             
     def __repr__(self) -> str:
         """Return representation of this Genome."""
