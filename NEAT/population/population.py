@@ -183,3 +183,21 @@ class Population:
         self.repopulate()
 
         self.generation += 1
+
+    def __getstate__(self) -> dict:
+        """Return a dictionary containing the attributes of this Population instance.
+         
+        This doesn't include any that are private (._), as then a Population can be 
+        loaded from a previous dump but with different settings.
+        """
+
+        d = {
+            'generation': self.generation,
+            'history': self.history,
+            'players': self.players,
+            'species': self.species,
+            'staleness': self.staleness,
+            'best_fitness': self.best_fitness,
+        }
+
+        return d
