@@ -203,10 +203,10 @@ class Genome:
 
         try:
             source = folder / filename
-            with source.open('r+') as src:
+            with source.open('rb') as src:
                 return pickle.load(src)
-        except FileNotFoundError:
-            raise Exception(f'Genome save {filename} not found in {folder}.')
+        except OSError:
+            raise Exception(f'Unable to open Genome save {filename} in {folder}.')
             
     def __repr__(self) -> str:
         """Return representation of this Genome."""
