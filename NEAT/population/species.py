@@ -136,6 +136,10 @@ class Species:
         If a Species save already exists in the same destination it will be overwritten.
         """
 
+        if self.players:
+            raise Exception('Do not attempt to save a Species between speciation and creating \
+                            the next generation (when the Species\' player list is non-empty).')
+
         with destination.open('wb') as dest:
             pickle.dump(self, dest)
 
