@@ -10,8 +10,8 @@ from NEAT.history import History
 
 
 class Genome:
-    """A Neural Network described by a lists of Nodes and the Connections 
-    bewtween them."""
+    """A Neural Network described by lists of Nodes and the Connections 
+    between them."""
 
     def __init__(self, input_count: int, output_count: int) -> None:
         self.nodes: list[Node] = []
