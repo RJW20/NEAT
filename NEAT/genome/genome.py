@@ -199,14 +199,14 @@ class Genome:
     @classmethod
     def load(cls, folder: Path, filename: PosixPath) -> Genome:
         """Create a Genome instance from a pickle dump located in the given folder with the 
-        given filename.
-        
-        Raises a FileNotFoundError exception if the dump does not exist.
-        """
+        given filename."""
 
-        source = folder / filename
-        with source.open('r+') as src:
-            return pickle.load(src)
+        try:
+            source = folder / filename
+            with source.open('r+') as src:
+                return pickle.load(src)
+        except FileNotFoundError:
+            raise Exception(f'Genome save {filename} not found in {folder}.')
             
     def __repr__(self) -> str:
         """Return representation of this Genome."""
