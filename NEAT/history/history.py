@@ -1,3 +1,7 @@
+from __future__ import annotations
+from pathlib import Path
+import pickle
+
 from NEAT.history.innovation import Innovation
 from NEAT.genome import Genome
 from NEAT.genome.node import Node
@@ -31,3 +35,22 @@ class History:
         new_innovation = Innovation(self.next_innovation_number, genome, from_node, to_node)
         self.innovations.append(new_innovation)
         return new_innovation.number
+    
+    def save(self, destination: Path) -> None:
+        """Save this instance of History in the given destination with pickle.
+        
+        If a History save already exists in the same destination it will be overwritten.
+        """
+
+        with destination.open('wb') as dest:
+            pickle.dump(self, dest)
+
+    @classmethod
+    def load(cls, source: Path) -> History:
+        """Return the history saved in the given source.
+        
+        Throws an OSError if fails to open the save.
+        """
+
+        with source.open('rb') as src:
+            return pickle.load(src)
