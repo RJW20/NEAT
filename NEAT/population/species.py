@@ -1,4 +1,6 @@
-import random
+from __future__ import annotations
+from pathlib import Path
+import pickle
 
 from NEAT.base_player import BasePlayer
 from NEAT.genome import Genome
@@ -127,3 +129,22 @@ class Species:
 
         remaining = max(int((1 - cull_percentage) * self.size), 1)
         self.players = self.players[:remaining]
+
+    def save(self, destination: Path) -> None:
+        """Save this Species in the given destination with pickle.
+        
+        If a Species save already exists in the same destination it will be overwritten.
+        """
+
+        with destination.open('wb') as dest:
+            pickle.dump(self, dest)
+
+    @classmethod
+    def load(cls, source: Path) -> Species:
+        """Return the Species saved in the given source.
+        
+        Throws an OSError if fails to open the save.
+        """
+
+        with source.open('rb') as src:
+            return pickle.load(src)
