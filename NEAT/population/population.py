@@ -1,6 +1,10 @@
 from __future__ import annotations
+from pathlib import Path
+import pickle
+import shutil
 
 from NEAT.base_player import BasePlayer
+from NEAT.genome import Genome
 from NEAT.population.species import Species
 from NEAT.history import History
 from NEAT.population.player_factory import PlayerFactory
@@ -14,12 +18,12 @@ class Population:
 
     def __init__(self, PlayerClass: type, settings: dict) -> None:
         self.generation: int
-        self.history: list[History]
+        self.history: History
         self.players: list[BasePlayer]
         self.species: list[Species]
 
-        self.staleness: int = 0
-        self.best_fitness: int = 0
+        self.staleness: int
+        self.best_fitness: int
 
         # Unload the settings
         try:
@@ -33,7 +37,9 @@ class Population:
             self._species_settings: dict = NEAT_settings['species_settings']
             self._reproduction_settings: dict = NEAT_settings['reproduction_settings']
 
-            self._playback_settings: dict = settings['playback_settings']    
+            self._playback_settings: dict = settings['playback_settings']   
+
+            self._save_folder = settings['save_folder'] 
 
         except KeyError as e:
             raise Exception(f'Setting {e.args[0]} not found in settings.')
@@ -61,9 +67,11 @@ class Population:
 
         population = cls(PlayerClass, settings)
         population.generation = 0
-        population.history = []
+        population.history = History()
         population.players = population.player_factory.new_players(population._size, population.history)
         population.species = []
+        population.staleness = 0
+        population.best_fitness = 0
 
         return population
 
@@ -129,10 +137,11 @@ class Population:
         """Remove all but the top two perfoming Species."""
         self.species = self.species[:2]
 
-    def repopulate(self) -> None:
+    def next_generation(self) -> None:
         """Populate self.players with the next generation."""
 
         self.players = []
+        self.generation += 1
 
         total_population_adjusted_fitness = self.total_adjusted_fitness
         for specie in self.species:
@@ -178,26 +187,129 @@ class Population:
         else:
             self.mass_extinction_event()
 
-        # Save parents for reloading
+        self.next_generation()
 
-        self.repopulate()
+        self.save()
 
-        self.generation += 1
-
-    def __getstate__(self) -> dict:
-        """Return a dictionary containing the attributes of this Population instance.
-         
-        This doesn't include any that are private (._), as then a Population can be 
-        loaded from a previous dump but with different settings.
+    def save(self) -> None:
+        """Save the Population and its attributes to self._save_folder.
+        
+        Creates the folder if it doesn't already exist.
+        If there is already a Population dump in the folder it will be overwritten.
         """
 
-        d = {
+        save_folder = Path(self._save_folder)
+
+        # Create the folder if it doesn't already exist
+        save_folder.mkdir(parents=True, exist_ok=True)
+
+        # Settings
+        NEAT_settings = {
+            'population_size': self._size,
+            'cull_percentage': self._cull_percentage,
+            'max_population_staleness': self._max_staleness,
+            'species_settings': self._species_settings,
+            'reproduction_settings': self._reproduction_settings,
+        }
+        settings = {
+            'player_args': self._player_args,
+            'genome_settings': self._genome_settings,
+            'NEAT_settings': NEAT_settings,
+            'playback_settings': self._playback_settings,
+            'save_folder': self._save_folder,
+        }
+        settings_destination = save_folder / 'settings.pickle'
+        with settings_destination.open('wb') as settings_dest:
+            pickle.dump(settings, settings_dest)
+
+        # Basic attributes
+        attributes = {
             'generation': self.generation,
-            'history': self.history,
-            'players': self.players,
-            'species': self.species,
             'staleness': self.staleness,
             'best_fitness': self.best_fitness,
         }
+        attributes_destination = save_folder / 'attributes.pickle'
+        with attributes_destination.open('wb') as attributes_dest:
+            pickle.dump(attributes, settings_dest)
 
-        return d
+        # History
+        history_dest = save_folder / 'history.pickle'
+        self.history.save(history_dest)
+
+        # Players' Genomes
+        genomes_destination = save_folder / 'genomes'
+        if genomes_destination.exists() and genomes_destination.is_dir():
+            shutil.rmtree(genomes_destination)
+        genomes_destination.mkdir()
+        for i, player in enumerate(self.players):
+            player.genome.save(genomes_destination, f'{i}.pickle')
+
+        # Species
+        species_destination = save_folder / 'species'
+        if species_destination.exists() and species_destination.is_dir():
+            shutil.rmtree(species_destination)
+        species_destination.mkdir()
+        for i, specie in enumerate(self.species):
+            specie.save(species_destination / f'{i}.pickle')
+
+    @classmethod
+    def load(cls, PlayerClass: type, settings: dict, folder: Path) -> Population:
+        """Return the Population saved in the given folder.
+         
+        The PlayerClass's player_args and the Population's playback_settings will either from the 
+        saved settings or the given settings depending on settings['load_all_settings'].
+        """
+
+        # Load all aspects of the save
+        try:
+
+            # Saved settings
+            settings_source = folder / 'settings.pickle'
+            with settings_source.open('rb') as settings_src:
+                loaded_settings = pickle.load(settings_src)
+            try:
+                if not settings['load_all_settings']:
+                    loaded_settings['player_args'] = settings['player_args']
+                    loaded_settings['NEAT_settings']['playback_settings'] = settings['NEAT_settings']['playback_settings']
+            except KeyError as e:
+                raise Exception(f'Setting {e.args[0]} not found in {e.args[1]}.')
+
+            # Basic attributes
+            attributes_source = folder / 'attributes.pickle'
+            with attributes_source.open('rb') as attributes_src:
+                loaded_attributes = pickle.load(attributes_src)
+
+            # History
+            history_source = folder / 'history.pickle'
+            loaded_history = History.load(history_source)
+
+            # Players' Genomes
+            genomes_source = folder / 'genomes'
+            loaded_genomes = [Genome.load(genomes_source, filename) for filename in genomes_source.iterdir()]
+                
+            # Species
+            species_source = folder / 'species'
+            loaded_species = [Species.load(species_source / filename) for filename in species_source.iterdir()]
+
+        except OSError as e:
+            raise Exception(f'Unable to open part of Population save {e.filename} in {folder}')
+
+        # Create the Population instance with appropriate settings and attributes  
+        population = cls(PlayerClass, loaded_settings)
+        
+        try:
+            population.generation = loaded_attributes['generation']
+            population.staleness = loaded_attributes['staleness']
+            population.best_fitness = loaded_attributes['best_fitness']
+        except KeyError as e:
+            raise Exception(f'Attribute {e.args[0]} not found in attributes save attributes.pickle in {folder}.')
+
+        population.history = loaded_history
+
+        population.players = []
+        for genome in loaded_genomes:
+            player = population.player_factory.empty_player()
+            player.genome = genome
+            population.players.append(player)
+
+        population.species = loaded_species
