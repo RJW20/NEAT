@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from NEAT.genome.connection import Connection
 from NEAT.genome.activation_functions import ActivationFunction, linear
 
 
@@ -12,7 +11,7 @@ class Node:
         self.layer: int = layer
         self.activation: ActivationFunction = activation
         self.input: float = .0
-        self.output_connections: list[Connection] = []
+        self.output_connections: list = []
 
     @property
     def output(self) -> float:
