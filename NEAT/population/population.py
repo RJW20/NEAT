@@ -37,9 +37,11 @@ class Population:
             self._species_settings: dict = NEAT_settings['species_settings']
             self._reproduction_settings: dict = NEAT_settings['reproduction_settings']
 
-            self._playback_settings: dict = settings['playback_settings']   
+            playback_settings: dict = settings['playback_settings']
+            self._playback_folder: str = playback_settings['save_folder']
+            self._playback_number: int | float = playback_settings['number']
 
-            self._save_folder = settings['save_folder'] 
+            self._save_folder: str = settings['save_folder'] 
 
         except KeyError as e:
             raise Exception(f'Setting {e.args[0]} not found in settings.')
@@ -179,7 +181,7 @@ class Population:
         self.check_progress()
         self.fitness_share()
 
-        # Save playback
+        self.save_playback()
 
         if not self.gone_stale:
             self.remove_stale_species()
@@ -190,6 +192,31 @@ class Population:
         self.next_generation()
 
         self.save()
+
+    def save_playback(self) -> None:
+        """Save the current top self._playback_number Genomes from each Species to 
+        self._playback_folder/{self.generation}.
+
+        If a save of a self.generation already exists in the self._playback_folder 
+        this will fail and the program will terminate.
+        """
+
+        playback_folder = Path(self._playback_folder) / f'{self.generation}'
+
+        # Create the folder, fail if it already exists
+        try:
+            playback_folder.mkdir(parents=True, exist_ok=False)
+        except FileExistsError:
+            raise Exception(f'Unable to save playback in {self._playback_folder}, please set a different \
+                            playback folder in settings or delete any previous saves in the current folder.')
+        
+        # Save each Species' Genomes
+        for i, specie in enumerate(self.species):
+            destination = playback_folder / str(i)
+            destination.mkdir()
+            num_to_save = min(self._playback_number, specie.size)
+            for j, player in enumerate(specie.players[:num_to_save]):
+                player.genome.save(destination, f'{j}.pickle')
 
     def save(self) -> None:
         """Save the Population and its attributes to self._save_folder.
@@ -211,11 +238,15 @@ class Population:
             'species_settings': self._species_settings,
             'reproduction_settings': self._reproduction_settings,
         }
+        playback_settings = {
+            'save_folder': self._playback_folder,
+            'number': self._playback_number,
+        }
         settings = {
             'player_args': self._player_args,
             'genome_settings': self._genome_settings,
             'NEAT_settings': NEAT_settings,
-            'playback_settings': self._playback_settings,
+            'playback_settings': playback_settings,
             'save_folder': self._save_folder,
         }
         settings_destination = save_folder / 'settings.pickle'
