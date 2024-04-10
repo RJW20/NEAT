@@ -29,7 +29,7 @@ class PlayerFactory:
             raise Exception(f'Setting {e.args[0]} not found in genome_settings.')
         
         try:
-            self._crossover_rate = reproduction_settings['reproduction_settings']
+            self._crossover_rate = reproduction_settings['crossover_rate']
             self._disabled_rate = reproduction_settings['disabled_rate']
             self._weights_rate = reproduction_settings['weights_rate']
             self._weight_replacement_rate = reproduction_settings['weight_replacement_rate']
