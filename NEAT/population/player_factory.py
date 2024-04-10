@@ -20,9 +20,10 @@ class PlayerFactory:
     ) -> None:
         self._PlayerClass: type = PlayerClass
         self._player_args: dict = player_args
-        self._genome_settings: dict = genome_settings
 
         try:
+            self._genome_input_count = genome_settings['input_count']
+            self._genome_output_count = genome_settings['output_count']
             self._hidden_activation = activation_by_name(genome_settings['hidden_activation'])
         except KeyError as e:
             raise Exception(f'Setting {e.args[0]} not found in genome_settings.')
@@ -47,8 +48,8 @@ class PlayerFactory:
         players = [self.empty_player() for _ in range(total)]
         for player in players:
             player.genome = Genome.new(
-                input_count = self._genome_settings['input_count'],
-                output_count = self._genome_settings['output_count'],
+                input_count = self._genome_input_count['input_count'],
+                output_count = self._genome_output_count['output_count'],
                 history = history,
             )
 
