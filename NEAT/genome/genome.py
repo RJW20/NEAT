@@ -114,11 +114,11 @@ class Genome:
         connection.enabled = False
 
         # Increment Node layer numbers if there is no space for a new Node
-        if connection.to_node - connection.from_node == 1:
+        if connection.to_node.layer - connection.from_node.layer == 1:
             for node in self.nodes:
                 if node.layer > connection.from_node.layer:
                     node.layer += 1
-                self.layers += 1
+            self.layers += 1
 
         # Create a new Node one layer on from the from_node
         new_node = Node(self.next_node, connection.from_node.layer + 1, activation_function)

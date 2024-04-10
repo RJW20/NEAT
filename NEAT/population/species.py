@@ -134,6 +134,7 @@ class Species:
         """Save this Species in the given destination with pickle.
         
         If a Species save already exists in the same destination it will be overwritten.
+        Fails if this Species has a non-empty players list.
         """
 
         if self.players:
