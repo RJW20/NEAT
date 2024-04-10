@@ -11,10 +11,7 @@ from NEAT.population.player_factory import PlayerFactory
 
 
 class Population:
-    """Contains Species of Players.
-    
-    Must be initiated with a settings dictionary as found in the documentation.
-    """
+    """Contains Species of Players."""
 
     def __init__(self, PlayerClass: type, settings: dict) -> None:
         self.generation: int
@@ -197,7 +194,7 @@ class Population:
         """Save the current top self._playback_number Genomes from each Species to 
         self._playback_folder/{self.generation}.
 
-        If a save of a self.generation already exists in the self._playback_folder 
+        If a save of self.generation already exists in the self._playback_folder 
         this will fail and the program will terminate.
         """
 
