@@ -38,10 +38,10 @@ types = {
     },
 
     'population_settings': {
-        'save_folder': str,
         'size': int,
         'cull_percentage': float, 
         'max_staleness': int,
+        'save_folder': str,
     },
 
     'species_settings': {

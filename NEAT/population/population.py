@@ -7,6 +7,7 @@ from NEAT.base_player import BasePlayer
 from NEAT.genome import Genome
 from NEAT.population.species import Species
 from NEAT.history import History
+from NEAT.settings import settings_handler
 from NEAT.population.player_factory import PlayerFactory
 
 
@@ -23,31 +24,29 @@ class Population:
         self.best_fitness: int
 
         # Unload the settings
-        try:
-            self._player_args: dict = settings['player_args']
-            self._genome_settings: dict = settings['genome_settings']
+        settings = settings_handler(settings)
+        player_args = settings['player_args']
+        genome_settings = settings['genome_settings']
 
-            NEAT_settings = settings['NEAT_settings']
-            self._size: int = NEAT_settings['population_size']
-            self._cull_percentage: float = NEAT_settings['cull_percentage']
-            self._max_staleness: int = NEAT_settings['max_population_staleness']
-            self._species_settings: dict = NEAT_settings['species_settings']
-            self._reproduction_settings: dict = NEAT_settings['reproduction_settings']
+        population_settings = settings['population_settings']
+        self._size: int = population_settings['population_size']
+        self._cull_percentage: float = population_settings['cull_percentage']
+        self._max_staleness: int = population_settings['max_population_staleness']
+        self._save_folder: str = population_settings['save_folder']
 
-            playback_settings: dict = settings['playback_settings']
-            self._playback_folder: str = playback_settings['save_folder']
-            self._playback_number: int | float = playback_settings['number']
+        self._species_settings: dict = settings['species_settings']
+        reproduction_settings = settings['reproduction_settings']
 
-            self._save_folder: str = settings['save_folder'] 
+        playback_settings = settings['playback_settings']
+        self._playback_folder: str = playback_settings['save_folder']
+        self._playback_number: int = playback_settings['number']
 
-        except KeyError as e:
-            raise Exception(f'Setting {e.args[0]} not found in settings.')
-        
+        # Initiate the player factory
         self.player_factory: PlayerFactory = PlayerFactory(
             PlayerClass = PlayerClass,
-            player_args = self._player_args,
-            genome_settings = self._genome_settings,
-            reproduction_settings = self._reproduction_settings,
+            player_args = player_args,
+            genome_settings = genome_settings,
+            reproduction_settings = reproduction_settings,
         )
 
     @property
@@ -228,23 +227,36 @@ class Population:
         save_folder.mkdir(parents=True, exist_ok=True)
 
         # Settings
-        NEAT_settings = {
-            'population_size': self._size,
+        genome_settings = {
+            'input_count': self.player_factory._genome_input_count,
+            'output_count': self.player_factory._genome_output_count,
+            'hidden_activation': self.player_factory._hidden_activation.__name__,
+        }
+        population_settings = {
+            'size': self._size,
             'cull_percentage': self._cull_percentage,
-            'max_population_staleness': self._max_staleness,
-            'species_settings': self._species_settings,
-            'reproduction_settings': self._reproduction_settings,
+            'max_staleness': self._max_staleness,
+            'save_folder': self._save_folder,
+        }
+        reproduction_settings = {
+            'crossover_rate': self.player_factory._crossover_rate,
+            'disabled_rate': self.player_factory._disabled_rate,
+            'weights_rate': self.player_factory._weights_rate,
+            'weight_replacement_rate': self.player_factory._weight_replacement_rate,
+            'connection_rate': self.player_factory._connection_rate,
+            'node_rate': self.player_factory._node_rate,
         }
         playback_settings = {
             'save_folder': self._playback_folder,
             'number': self._playback_number,
         }
         settings = {
-            'player_args': self._player_args,
-            'genome_settings': self._genome_settings,
-            'NEAT_settings': NEAT_settings,
+            'player_args': self.player_factory._player_args,
+            'genome_settings': genome_settings,
+            'population_settings': population_settings,
+            'species_settings': self._species_settings,
+            'repoduction_settings': reproduction_settings,
             'playback_settings': playback_settings,
-            'save_folder': self._save_folder,
         }
         settings_destination = save_folder / 'settings.pickle'
         with settings_destination.open('wb') as settings_dest:

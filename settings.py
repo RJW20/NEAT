@@ -6,17 +6,17 @@ genome_settings = {
 
     'input_count': None,
     'output_count': None,
-    'hidden_activation': None
+    'hidden_activation': None,
 
 }
 
 
 population_settings = {
 
-    'save_folder': '',
     'size': None,
     'cull_percentage': None,
     'max_staleness': None,
+    'save_folder': '',
 
 }
 
