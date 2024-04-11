@@ -203,7 +203,7 @@ class Population:
         try:
             playback_folder.mkdir(parents=True, exist_ok=False)
         except FileExistsError:
-            raise Exception(f'Unable to save playback in {self._playback_folder}, please set a different \
+            raise Exception(f'Unable to save playback in \'{self._playback_folder}\', please set a different \
                             playback folder in settings or delete any previous saves in the current folder.')
         
         # Save each Species' Genomes
@@ -312,7 +312,7 @@ class Population:
                     loaded_settings['player_args'] = settings['player_args']
                     loaded_settings['NEAT_settings']['playback_settings'] = settings['NEAT_settings']['playback_settings']
             except KeyError as e:
-                raise Exception(f'Setting {e.args[0]} not found in {e.args[1]}.')
+                raise Exception(f'Setting \'{e.args[0]}\' not found in {e.args[1]}.')
 
             # Basic attributes
             attributes_source = folder / 'attributes.pickle'
@@ -332,7 +332,7 @@ class Population:
             loaded_species = [Species.load(species_source / filename) for filename in species_source.iterdir()]
 
         except OSError as e:
-            raise Exception(f'Unable to open part of Population save {e.filename} in {folder}')
+            raise Exception(f'Unable to open part of Population save \'{e.filename}\' in \'{folder}\'.')
 
         # Create the Population instance with appropriate settings and attributes  
         population = cls(PlayerClass, loaded_settings)
@@ -342,7 +342,7 @@ class Population:
             population.staleness = loaded_attributes['staleness']
             population.best_fitness = loaded_attributes['best_fitness']
         except KeyError as e:
-            raise Exception(f'Attribute {e.args[0]} not found in attributes save attributes.pickle in {folder}.')
+            raise Exception(f'Attribute \'{e.args[0]}\' not found in attributes save attributes.pickle in \'{folder}\'.')
 
         population.history = loaded_history
 

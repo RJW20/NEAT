@@ -206,7 +206,7 @@ class Genome:
             with source.open('rb') as src:
                 return pickle.load(src)
         except OSError:
-            raise Exception(f'Unable to open Genome save {filename} in {folder}.')
+            raise Exception(f'Unable to open Genome save \'{filename}\' in \'{folder}\'.')
             
     def __repr__(self) -> str:
         """Return representation of this Genome."""

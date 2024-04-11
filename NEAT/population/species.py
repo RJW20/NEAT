@@ -33,7 +33,7 @@ class Species:
             self._delta = settings['compatibility_threshold']
             self._max_staleness = settings['max_staleness']
         except KeyError as e:
-            raise Exception(f'Setting {e.args[0]} not found in species_settings.')
+            raise Exception(f'Setting \'{e.args[0]}\' not found in species_settings.')
 
     @property
     def champ(self) -> BasePlayer:

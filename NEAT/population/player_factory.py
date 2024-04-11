@@ -26,7 +26,7 @@ class PlayerFactory:
             self._genome_output_count = genome_settings['output_count']
             self._hidden_activation = activation_by_name(genome_settings['hidden_activation'])
         except KeyError as e:
-            raise Exception(f'Setting {e.args[0]} not found in genome_settings.')
+            raise Exception(f'Setting \'{e.args[0]}\' not found in genome_settings.')
         
         try:
             self._crossover_rate = reproduction_settings['crossover_rate']
@@ -36,7 +36,7 @@ class PlayerFactory:
             self._connection_rate = reproduction_settings['connection_rate']
             self._node_rate = reproduction_settings['node_rate']
         except KeyError as e:
-            raise Exception(f'Setting {e.args[0]} not found in reproduction_settings.')
+            raise Exception(f'Setting \'{e.args[0]}\' not found in reproduction_settings.')
         
     def empty_player(self) -> BasePlayer:
         """Return a new Player without a Genome."""
