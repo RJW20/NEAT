@@ -85,6 +85,9 @@ settings = {
     'creation_type': 'new', # Options are ['new', 'load']
     # Choose whether to load the settings from the save or use the ones present in this file
     'load_all_settings': True,
+    # The number of generations to run the Population until
+    # A loaded Population will remember the generation it was saved at and still only run till this number
+    'total_generations': 100,
 
     'player_args': player_args,
     'genome_settings': genome_settings,
