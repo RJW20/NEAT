@@ -13,8 +13,8 @@ def run(
     """Apply the NEAT algorithm to a Population of Players.
      
     The Player's class will be of given class PlayerClass, which must inherit from NEAT.BasePlayer.
-    The simulate function must run a given Player in its environment and then assign it a fitness 
-    depending on how well it performs.
+    The simulate function must run a given Player in its environment and then assign it a (positive) 
+    fitness signifying how well it performs.
     The settings dictionary must contain:
      - 3 entries determining the generation type and lifespan of the Population.
      - player_args: the PlayerClass' required instantiation arguments.
