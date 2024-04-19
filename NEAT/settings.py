@@ -92,7 +92,7 @@ def settings_handler(settings: dict) -> dict:
         settings['species_settings'] = dict()
 
     try:
-        settings['species_settings']
+        settings['reproduction_settings']
     except KeyError:
         settings['reproduction_settings'] = dict()
 

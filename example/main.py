@@ -9,8 +9,8 @@ def main() -> None:
 
     NEAT.run(
         PlayerClass=Player,
-        settings=settings,
         simulate=simulate,
+        settings=settings,
     )
 
 

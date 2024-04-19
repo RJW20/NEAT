@@ -2,7 +2,8 @@
 NEAT Settings
 
 Options with a default value indicated can be left as None or completely removed and the default 
-value for that settings will be used.
+value for that setting will be used. If an entire dictionary has default values that you wish to 
+use you may completely remove the dictionary.
 """
 
 
@@ -26,7 +27,7 @@ population_settings = {
 
     # The number of Players per generation
     'size': None,
-    # The percentage of Players to remove before creating offspring each generation
+    # The percentage of Players to remove from each Species before creating offspring each generation
     'cull_percentage': None,    # Default = 0.5
     # The number of generations to go without improvement before removing all but the 2 best performing Species
     'max_staleness': None,  # Default = 20
