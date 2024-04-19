@@ -36,5 +36,5 @@ class Connection:
 
     def __repr__(self) -> str:
         """Return representation of this Connection."""
-        return f'<Connection: From = {self.from_node.number}, To = {self.to_node.number}, 
+        return f'<Connection: From = {self.from_node.number}, To = {self.to_node.number}, \
                  Innovation = {self.innovation_number}, Enabled = {self.enabled}>'

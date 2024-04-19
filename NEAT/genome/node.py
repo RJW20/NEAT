@@ -2,6 +2,10 @@ from __future__ import annotations
 
 from NEAT.genome.activation_functions import ActivationFunction, linear
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from NEAT.genome.connection import Connection
+
 
 class Node:
     """Node in the Neural Network of a Genome."""
@@ -11,7 +15,7 @@ class Node:
         self.layer: int = layer
         self.activation: ActivationFunction = activation
         self.input: float = .0
-        self.output_connections: list = []
+        self.output_connections: list[Connection] = []
 
     @property
     def output(self) -> float:
