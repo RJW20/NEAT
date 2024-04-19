@@ -15,7 +15,7 @@ class Node:
         self.layer: int = layer
         self.activation: ActivationFunction = activation
         self.input: float = .0
-        self.output_connections: list[Connection] = []
+        self.output_connections: list['Connection'] = []
 
     @property
     def output(self) -> float:

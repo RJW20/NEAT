@@ -13,13 +13,13 @@ class Innovation:
     uniquely identifies a new Connection between two Nodes.
     """
 
-    def __init__(self, number: int, genome: Genome, from_node: Node, to_node: Node) -> None:
+    def __init__(self, number: int, genome: 'Genome', from_node: Node, to_node: Node) -> None:
         self.number: int = number
         self.present_connections: set[int] = genome.innovation_numbers.copy()
         self.from_node_number: int = from_node.number
         self.to_node_number: int = to_node.number
 
-    def match(self, genome: Genome, from_node: Node, to_node: Node) -> bool:
+    def match(self, genome: 'Genome', from_node: Node, to_node: Node) -> bool:
         """Return True if a Genome that is about to make a new Connection matches 
         this Innovation."""
 

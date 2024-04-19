@@ -20,7 +20,7 @@ class History:
         """The number to assign to the next new Innovation."""
         return len(self.innovations)
 
-    def get_innovation_number(self, genome: Genome, from_node: Node, to_node: Node) -> int:
+    def get_innovation_number(self, genome: 'Genome', from_node: Node, to_node: Node) -> int:
         """Return the innovation number for a Genome mutation that is making a new Connection 
         (new Node or new Connection mutation).
         
