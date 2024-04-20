@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "NEAT"
+name = "neat"
 version = "0.1.0"
 description = "Implementation of the Neuro-Evolution of Augmenting Topologies (NEAT)."
 authors = ["RJW20"]

@@ -310,7 +310,7 @@ class Population:
             try:
                 if not settings['load_all_settings']:
                     loaded_settings['player_args'] = settings['player_args']
-                    loaded_settings['neat_settings']['playback_settings'] = settings['neat_settings']['playback_settings']
+                    loaded_settings['playback_settings'] = settings['playback_settings']
             except KeyError as e:
                 raise Exception(f'Setting \'{e.args[0]}\' not found in {e.args[1]}.')
 
