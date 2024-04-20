@@ -92,8 +92,7 @@ class PlayerFactory:
                 node_activation = self._hidden_activation,
                 history = history
             )
-            
-        # The method for adding children to offspring (in 1's and 2's) can cause there to be 1 too many
-        offspring = offspring[:total]
+
+            offspring.append(child)
 
         return offspring
