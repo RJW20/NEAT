@@ -41,7 +41,7 @@ class Genome:
             nodes_in_layers[node.layer] += 1
 
         # Create a dictionary containing the number of Nodes in front of a layer
-        nodes_in_front = {sum([nodes_in_layers[i] for i in range(layer + 1, self.layers)]) for layer in range(self.layers)}
+        nodes_in_front = {layer: sum([nodes_in_layers[i] for i in range(layer + 1, self.layers)]) for layer in range(self.layers)}
 
         # Compute the number of connections a fully connected NN would have
         max_connections = 0

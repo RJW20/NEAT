@@ -52,7 +52,7 @@ def add_node(genome: Genome, node_activation: ActivationFunction, history: Histo
 
     # Get a Connection that is not from the bias Node
     connection = random.choice(genome.connections)
-    while connection.from_node == genome.nodes(genome.bias_node_idx):
+    while connection.from_node == genome.nodes[genome.bias_node_idx]:
         connection = random.choice(genome.connections)
 
     # Add a Node in the middle of the Connection
