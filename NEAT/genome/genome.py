@@ -106,8 +106,12 @@ class Genome:
 
     def add_node(self, connection: Connection, activation_function: ActivationFunction, history: History) -> None:
         """Disable the given Connection and then insert a Node inbetween the previous from- and 
-        to-Nodes and add new Connections between them.
+        to-nodes and add new Connections between them.
         
+        The weight of the Connection from the original from_node to the new Node will be 1.
+        The weight of the Connection from the new Node to the original to_node will be the weight 
+        of the original Connection.
+        The bias will be connected to the new Node by a Connection with weight 0.
         The new Node will have the given activation function.
         """
         
