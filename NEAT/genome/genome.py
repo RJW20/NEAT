@@ -16,7 +16,7 @@ class Genome:
 
     def __init__(self, input_count: int, output_count: int) -> None:
         self.nodes: list[Node] = list()
-        self.connections: ConnectionsList[Connection] = list()
+        self.connections: ConnectionsList[Connection] = ConnectionsList()
         self.layers: int
         self.input_count: int = input_count
         self.output_count: int = output_count
