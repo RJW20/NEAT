@@ -2,8 +2,8 @@ from NEAT.genome.connection import Connection
 
 
 class ConnectionsList(list):
-    """Subclass of built-in list that automatically updates the Nodes in the
-    contained Connection's output_connection attributes."""
+    """Subclass of built-in list that automatically updates the contained Connection's
+    from_nodes' output_connection attributes."""
 
     def append(self, connection: Connection) -> None:
         super().append(connection)
