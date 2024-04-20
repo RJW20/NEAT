@@ -1,7 +1,7 @@
 from __future__ import annotations
 import random
 
-from NEAT.genome.node import Node
+from neat.genome.node import Node
 
 
 class Connection:

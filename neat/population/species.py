@@ -2,8 +2,8 @@ from __future__ import annotations
 from pathlib import Path
 import pickle
 
-from NEAT.base_player import BasePlayer
-from NEAT.genome import Genome
+from neat.base_player import BasePlayer
+from neat.genome import Genome
 
 
 class Species:

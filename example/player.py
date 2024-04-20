@@ -1,6 +1,6 @@
 from typing import Iterable, Any
 
-from NEAT import BasePlayer
+from neat import BasePlayer
 
 
 class Player(BasePlayer):

@@ -1,8 +1,8 @@
-from NEAT.genome.node import Node
+from neat.genome.node import Node
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from NEAT.genome import Genome
+    from neat.genome import Genome
 
 
 class Innovation:

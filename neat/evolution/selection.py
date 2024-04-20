@@ -1,6 +1,6 @@
 import random
 
-from NEAT.base_player import BasePlayer
+from neat.base_player import BasePlayer
 
 
 def fitness_weighted_selection(parents: list[BasePlayer], total: int) -> list[BasePlayer]:

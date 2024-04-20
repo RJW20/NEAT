@@ -1,8 +1,8 @@
 from typing import Callable
 from multiprocessing import Pool, cpu_count
 
-from NEAT.base_player import BasePlayer
-from NEAT.population import Population
+from neat.base_player import BasePlayer
+from neat.population import Population
 
 
 def run(
@@ -12,7 +12,7 @@ def run(
 ) -> None:
     """Apply the NEAT algorithm to a Population of Players.
      
-    The Player's class will be of given class PlayerClass, which must inherit from NEAT.BasePlayer.
+    The Player's class will be of given class PlayerClass, which must inherit from neat.BasePlayer.
     The simulate function must run a given Player in its environment and then assign it a (positive) 
     fitness signifying how well it performs.
     The settings dictionary must contain:

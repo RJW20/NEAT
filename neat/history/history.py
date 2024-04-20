@@ -2,12 +2,12 @@ from __future__ import annotations
 from pathlib import Path
 import pickle
 
-from NEAT.history.innovation import Innovation
-from NEAT.genome.node import Node
+from neat.history.innovation import Innovation
+from neat.genome.node import Node
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from NEAT.genome import Genome
+    from neat.genome import Genome
 
 class History:
     """Contains all previous Innovations."""

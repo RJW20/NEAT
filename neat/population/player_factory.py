@@ -1,10 +1,10 @@
 import random
 
-from NEAT.base_player import BasePlayer
-from NEAT.genome import Genome
-from NEAT.history import History
-from NEAT.genome.activation_functions import activation_by_name
-from NEAT.evolution import fitness_weighted_selection, crossover, mutate
+from neat.base_player import BasePlayer
+from neat.genome import Genome
+from neat.history import History
+from neat.genome.activation_functions import activation_by_name
+from neat.evolution import fitness_weighted_selection, crossover, mutate
 
 
 class PlayerFactory:

@@ -1,4 +1,4 @@
-import NEAT
+import neat
 
 from .player import Player
 from .settings import settings
@@ -7,7 +7,7 @@ from .simulator import simulate
 
 def main() -> None:
 
-    NEAT.run(
+    neat.run(
         PlayerClass=Player,
         simulate=simulate,
         settings=settings,

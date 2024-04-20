@@ -3,11 +3,11 @@ from typing import Iterable
 from pathlib import Path, PosixPath
 import pickle
 
-from NEAT.genome.node import Node
-from NEAT.genome.connection import Connection
-from NEAT.genome.connections_list import ConnectionsList
-from NEAT.genome.activation_functions import ActivationFunction
-from NEAT.history import History
+from neat.genome.node import Node
+from neat.genome.connection import Connection
+from neat.genome.connections_list import ConnectionsList
+from neat.genome.activation_functions import ActivationFunction
+from neat.history import History
 
 
 class Genome:

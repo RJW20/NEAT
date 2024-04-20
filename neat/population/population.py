@@ -3,12 +3,12 @@ from pathlib import Path
 import pickle
 import shutil
 
-from NEAT.base_player import BasePlayer
-from NEAT.genome import Genome
-from NEAT.population.species import Species
-from NEAT.history import History
-from NEAT.settings import settings_handler
-from NEAT.population.player_factory import PlayerFactory
+from neat.base_player import BasePlayer
+from neat.genome import Genome
+from neat.population.species import Species
+from neat.history import History
+from neat.settings import settings_handler
+from neat.population.player_factory import PlayerFactory
 
 
 class Population:
@@ -310,7 +310,7 @@ class Population:
             try:
                 if not settings['load_all_settings']:
                     loaded_settings['player_args'] = settings['player_args']
-                    loaded_settings['NEAT_settings']['playback_settings'] = settings['NEAT_settings']['playback_settings']
+                    loaded_settings['neat_settings']['playback_settings'] = settings['neat_settings']['playback_settings']
             except KeyError as e:
                 raise Exception(f'Setting \'{e.args[0]}\' not found in {e.args[1]}.')
 

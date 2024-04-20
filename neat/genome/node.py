@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from NEAT.genome.activation_functions import ActivationFunction, linear
+from neat.genome.activation_functions import ActivationFunction, linear
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from NEAT.genome.connection import Connection
+    from neat.genome.connection import Connection
 
 
 class Node:

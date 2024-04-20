@@ -1,6 +1,6 @@
 import random
 
-from NEAT.genome import Genome
+from neat.genome import Genome
 
 
 def crossover(genome1: Genome, genome2: Genome, disabled_rate: float) -> Genome:

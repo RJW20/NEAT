@@ -1,4 +1,4 @@
-from NEAT.genome.connection import Connection
+from neat.genome.connection import Connection
 
 
 class ConnectionsList(list):

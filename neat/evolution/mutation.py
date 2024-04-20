@@ -1,8 +1,8 @@
 import random
 
-from NEAT.genome import Genome
-from NEAT.genome.activation_functions import ActivationFunction
-from NEAT.history import History
+from neat.genome import Genome
+from neat.genome.activation_functions import ActivationFunction
+from neat.history import History
 
 
 
