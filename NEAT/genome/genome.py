@@ -5,6 +5,7 @@ import pickle
 
 from NEAT.genome.node import Node
 from NEAT.genome.connection import Connection
+from NEAT.genome.connections_list import ConnectionsList
 from NEAT.genome.activation_functions import ActivationFunction
 from NEAT.history import History
 
@@ -14,8 +15,8 @@ class Genome:
     between them."""
 
     def __init__(self, input_count: int, output_count: int) -> None:
-        self.nodes: list[Node] = []
-        self.connections: list[Connection] = []
+        self.nodes: list[Node] = list()
+        self.connections: ConnectionsList[Connection] = list()
         self.layers: int
         self.input_count: int = input_count
         self.output_count: int = output_count
@@ -136,12 +137,6 @@ class Genome:
     def prepare_network(self) -> None:
         """Prepare the list of Nodes to be used as a NN."""
 
-        # Assign all Connections to the Nodes themselves so we can engage them
-        for node in self.nodes:
-            node.output_connections.clear()
-        for connection in self.connections:
-            connection.from_node.output_connections.append(connection)
-
         # Sort the Nodes by layer (first-key) and by number (second-key) so that they will be 
         # engaged in the correct order and the input and output Nodes don't change relative position
         self.nodes.sort(key=lambda node: (node.layer, node.number))
@@ -183,6 +178,8 @@ class Genome:
             from_node = clone_nodes[connection.from_node.number]
             to_node = clone_nodes[connection.to_node.number]
             clone.connections.append(connection.clone(from_node, to_node))
+
+        # Let all the Nodes know about each other
 
         clone.layers = self.layers
         clone.bias_node_idx = self.bias_node_idx
