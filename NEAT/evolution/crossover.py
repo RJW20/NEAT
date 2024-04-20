@@ -15,9 +15,10 @@ def crossover(genome1: Genome, genome2: Genome, disabled_rate: float) -> Genome:
     result = Genome(genome1.input_count, genome2.input_count)
 
     # Since excess and disjoint Connections come from genome1, the resulting crossover 
-    # can only have Nodes from it
+    # can only have Nodes from it (and hence also has the same number of layers)
     for node in genome1.nodes:
         result.nodes.append(node.clone())
+    result.layers = genome1.layers
 
     # Add (clones of) Connections from both Genomes
     genome2_connections = genome2.connections_dict
