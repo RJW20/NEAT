@@ -33,9 +33,9 @@ def add_connection(genome: Genome, history: History) -> None:
         return
 
     # Get two Nodes in different layers that are not connected, in the correct order
-    from_node, to_node = random.choices(genome.nodes, k = 2).sorted(key=lambda node: node.layer)
+    from_node, to_node = sorted(random.choices(genome.nodes, k = 2), key=lambda node: node.layer)
     while from_node.layer == to_node.layer or from_node.connected_to(to_node):
-        from_node, to_node = random.choices(genome.nodes, k = 2).sorted(key=lambda node: node.layer)
+        from_node, to_node = sorted(random.choices(genome.nodes, k = 2), key=lambda node: node.layer)
 
     # Add the Connection
     genome.add_connection(from_node, to_node, history)

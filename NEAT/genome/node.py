@@ -21,7 +21,6 @@ class Node:
     def output(self) -> float:
         return self.activation(self.input)
     
-    @property
     def connected_to(self, other: Node) -> bool:
         """Return True if the other Node is in this Node's list of outputs."""
         return other in [connection.to_node for connection in self.output_connections]
