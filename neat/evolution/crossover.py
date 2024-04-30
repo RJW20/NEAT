@@ -12,7 +12,7 @@ def crossover(genome1: Genome, genome2: Genome, disabled_rate: float) -> Genome:
     present in both Genomes and disabled in at least one of them.
     """
 
-    result = Genome(genome1.input_count, genome2.input_count)
+    result = Genome(genome1.input_count, genome1.output_count)
 
     # Since excess and disjoint Connections come from genome1, the resulting crossover 
     # can only have Nodes from it (and hence also has the same number of layers)
