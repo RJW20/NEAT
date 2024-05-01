@@ -8,7 +8,7 @@ from neat.genome import Genome
 from neat.population.species import Species
 from neat.history import History
 from neat.settings import settings_handler
-from neat.player_factory import PlayerFactory
+from neat.population.player_factory import PlayerFactory
 
 
 class Population:
@@ -64,7 +64,7 @@ class Population:
         """Return a new Population with a full list of Players with randomized Genomes."""
 
         population = cls(PlayerClass, settings)
-        population.generation = 0
+        population.generation = 1
         population.history = History()
         population.players = population.player_factory.new_players(population._size, population.history)
         population.species = []
