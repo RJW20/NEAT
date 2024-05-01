@@ -48,8 +48,8 @@ class PlayerFactory:
         players = [self.empty_player() for _ in range(total)]
         for player in players:
             player.genome = Genome.new(
-                input_count = self._genome_input_count['input_count'],
-                output_count = self._genome_output_count['output_count'],
+                input_count = self._genome_input_count,
+                output_count = self._genome_output_count,
                 history = history,
             )
 
