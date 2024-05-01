@@ -29,9 +29,9 @@ class Population:
         genome_settings = settings['genome_settings']
 
         population_settings = settings['population_settings']
-        self._size: int = population_settings['population_size']
+        self._size: int = population_settings['size']
         self._cull_percentage: float = population_settings['cull_percentage']
-        self._max_staleness: int = population_settings['max_population_staleness']
+        self._max_staleness: int = population_settings['max_staleness']
         self._save_folder: str = population_settings['save_folder']
 
         self._species_settings: dict = settings['species_settings']
@@ -97,6 +97,8 @@ class Population:
             specie.rank_players()
 
         self.species.sort(key = lambda specie: specie.best_fitness, reverse=True)
+
+        print(self.species[0].players[0].best_score)
 
     def check_progress(self) -> None:
         """Check whether the Population is improving on both a Specie and overall level."""
