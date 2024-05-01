@@ -203,8 +203,8 @@ class Population:
         try:
             playback_folder.mkdir(parents=True, exist_ok=False)
         except FileExistsError:
-            raise Exception(f'Unable to save playback in \'{self._playback_folder}\', please set a different \
-                playback folder in settings or delete any previous saves in the current folder.')
+            raise Exception(f'Unable to save playback in \'{self._playback_folder}\', please set a different' + \
+                'playback folder in settings or delete any previous saves in the current folder.')
         
         # Save each Species' Genomes
         for i, specie in enumerate(self.species):
