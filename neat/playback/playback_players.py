@@ -41,7 +41,7 @@ class PlaybackPlayers:
             specie = []
             genomes_source = species_source / folder
             try:
-                genomes = [Genome.load(genomes_source, filename) for filename in genomes_source.iterdir()]
+                genomes = [Genome.load(file_path) for file_path in genomes_source.iterdir()]
                 for genome in genomes:
                     player = self._PlayerClass(self._player_args)
                     player.genome = genome

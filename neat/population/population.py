@@ -329,11 +329,11 @@ class Population:
 
             # Players' Genomes
             genomes_source = folder / 'genomes'
-            loaded_genomes = [Genome.load(genomes_source, filename) for filename in genomes_source.iterdir()]
+            loaded_genomes = [Genome.load(file_path) for file_path in genomes_source.iterdir()]
                 
             # Species
             species_source = folder / 'species'
-            loaded_species = [Species.load(species_source / filename) for filename in species_source.iterdir()]
+            loaded_species = [Species.load(file_path) for file_path in species_source.iterdir()]
 
         except OSError as e:
             raise Exception(f'Unable to open part of Population save \'{e.filename}\' in \'{folder}\'.')
