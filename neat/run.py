@@ -44,7 +44,7 @@ def run(
 
     cores_to_use = cpu_count() // 2
 
-    while population.generation < total_generations:
+    while population.generation <= total_generations:
 
         with Pool(cores_to_use) as pool:
             population.players = pool.map(simulate, population.players, chunksize=1)
