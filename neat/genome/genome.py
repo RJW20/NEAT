@@ -198,16 +198,24 @@ class Genome:
             pickle.dump(self, dest)
 
     @classmethod
-    def load(cls, folder: Path, filename: PosixPath) -> Genome:
-        """Create a Genome instance from a pickle dump located in the given folder with the 
-        given filename."""
+    def load(cls, path: Path, filename: PosixPath | None = None) -> Genome:
+        """Create a Genome instance from a pickle dump.
+         
+        If just the path is given it will be attempted to load from there.
+        If both the path and filename are given the path will be treated as the directory to 
+        look in for the filename. 
+        """
+
+        source = path / filename if filename else path
 
         try:
-            source = folder / filename
             with source.open('rb') as src:
                 return pickle.load(src)
         except OSError:
-            raise Exception(f'Unable to open Genome save \'{filename}\' in \'{folder}\'.')
+            if filename:
+                raise OSError(f'Unable to open Genome save \'{filename}\' in \'{path}\'.')
+            else:
+                raise OSError(f'Unable to open Genome save \'{path}\'.')
             
     def __repr__(self) -> str:
         """Return representation of this Genome."""

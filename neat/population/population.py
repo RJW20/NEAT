@@ -270,7 +270,7 @@ class Population:
         }
         attributes_destination = save_folder / 'attributes.pickle'
         with attributes_destination.open('wb') as attributes_dest:
-            pickle.dump(attributes, settings_dest)
+            pickle.dump(attributes, attributes_dest)
 
         # History
         history_dest = save_folder / 'history.pickle'
