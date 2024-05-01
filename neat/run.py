@@ -33,8 +33,8 @@ def run(
                 load_folder = settings['population_settings']['save_folder']
                 population = Population.load(PlayerClass, settings, load_folder)
             except KeyError:
-                raise Exception('Setting population_settings[\'save_folder\'] must be present (and contain a viable save) \
-                                to load a Population.')
+                raise Exception('Setting population_settings[\'save_folder\'] must be present (and contain a viable save) ' + \
+                    'to load a Population.')
 
     # Evolve the Population to the desired generation
     try:
