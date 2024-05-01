@@ -129,17 +129,13 @@ class Genome:
         new_node = Node(self.next_node, connection.from_node.layer + 1, activation_function)
         self.nodes.append(new_node)
 
+        # Reorder the Nodes so they engage in the correct order
+        self.nodes.sort(key=lambda node: (node.layer, node.number))
+
         # Connect to the original Nodes and the bias Node
         self.add_connection(connection.from_node, new_node, history, weight=1)
         self.add_connection(new_node, connection.to_node, history)
         self.add_connection(self.nodes[self.bias_node_idx], new_node, history, weight=0)
-
-    def prepare_network(self) -> None:
-        """Prepare the list of Nodes to be used as a NN."""
-
-        # Sort the Nodes by layer (first-key) and by number (second-key) so that they will be 
-        # engaged in the correct order and the input and output Nodes don't change relative position
-        self.nodes.sort(key=lambda node: (node.layer, node.number))
 
     def propagate(self, input: Iterable[float]) -> tuple[float, ...]:
         """Feed in input values for the NN and return output.
