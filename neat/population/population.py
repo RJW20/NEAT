@@ -98,8 +98,6 @@ class Population:
 
         self.species.sort(key = lambda specie: specie.best_fitness, reverse=True)
 
-        print(self.species[0].players[0].best_score)
-
     def check_progress(self) -> None:
         """Check whether the Population is improving on both a Specie and overall level."""
 
@@ -206,7 +204,7 @@ class Population:
             playback_folder.mkdir(parents=True, exist_ok=False)
         except FileExistsError:
             raise Exception(f'Unable to save playback in \'{self._playback_folder}\', please set a different \
-                            playback folder in settings or delete any previous saves in the current folder.')
+                playback folder in settings or delete any previous saves in the current folder.')
         
         # Save each Species' Genomes
         for i, specie in enumerate(self.species):
@@ -214,7 +212,7 @@ class Population:
             destination.mkdir()
             num_to_save = min(self._playback_number, specie.size)
             for j, player in enumerate(specie.players[:num_to_save]):
-                player.genome.save(destination, f'{j}.pickle')
+                player.genome.save(destination, str(j))
 
     def save(self) -> None:
         """Save the Population and its attributes to self._save_folder.
@@ -284,7 +282,7 @@ class Population:
             shutil.rmtree(genomes_destination)
         genomes_destination.mkdir()
         for i, player in enumerate(self.players):
-            player.genome.save(genomes_destination, f'{i}.pickle')
+            player.genome.save(genomes_destination, str(i))
 
         # Species
         species_destination = save_folder / 'species'
