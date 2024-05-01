@@ -357,3 +357,5 @@ class Population:
             population.players.append(player)
 
         population.species = loaded_species
+
+        return population
