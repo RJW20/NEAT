@@ -20,7 +20,7 @@ class Species:
         # When creating a new Species the given Player will always be the only option
         # for a rep 
         self.rep: Genome = player.genome.clone()
-        self.players: list[BasePlayer] = list(player)
+        self.players: list[BasePlayer] = [player]
 
         self.staleness: int = 0
         self.best_fitness: int = 0
