@@ -1,4 +1,5 @@
 from typing import Callable
+from pathlib import Path
 from multiprocessing import Pool, cpu_count
 
 from neat.base_player import BasePlayer
@@ -30,7 +31,7 @@ def run(
             population = Population.new(PlayerClass, settings)
         case 'load':
             try:
-                load_folder = settings['population_settings']['save_folder']
+                load_folder = Path(settings['population_settings']['save_folder'])
                 population = Population.load(PlayerClass, settings, load_folder)
             except KeyError:
                 raise Exception('Setting population_settings[\'save_folder\'] must be present (and contain a viable save) ' + \
