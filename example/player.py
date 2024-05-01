@@ -5,7 +5,7 @@ from neat import BasePlayer
 
 class Player(BasePlayer):
 
-    def __init__(self, **player_args: dict) -> None:
+    def __init__(self, *player_args: dict) -> None:
         super().__init__()
         self.vision: Iterable
 
