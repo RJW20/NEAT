@@ -202,12 +202,7 @@ class Genome:
         look in for the filename. 
         """
 
-        print(path)
-        print(filename)
-
         source = path / filename if filename else path
-        print(source)
-        print('here')
 
         try:
             with source.open('rb') as src:
