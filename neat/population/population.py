@@ -8,7 +8,7 @@ from neat.genome import Genome
 from neat.population.species import Species
 from neat.history import History
 from neat.settings import settings_handler
-from neat.population.player_factory import PlayerFactory
+from neat.player_factory import PlayerFactory
 
 
 class Population:
