@@ -195,7 +195,11 @@ class Population:
 
         If a save of self.generation already exists in the self._playback_folder 
         this will fail and the program will terminate.
+        If self._playback_number is zero then the folders won't be created.
         """
+
+        if self._playback_number == 0:
+            return
 
         playback_folder = Path(self._playback_folder) / f'{self.generation}'
 
