@@ -104,6 +104,7 @@ settings = {
     # When choosing to load they will be attempted to be loaded from population_settings['save_folder']
     'creation_type': 'new', # Options are ['new', 'load']
     # Choose whether to load the settings from the save or use the ones present in this file (if applicable)
+    # Only the player_args, progress_settings and playback_settings will be replaced
     'load_all_settings': True,
     # The number of generations to run the Population until
     # A loaded Population will remember the generation it was saved at and still only run till this number
