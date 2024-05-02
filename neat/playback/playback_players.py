@@ -20,11 +20,11 @@ class PlaybackPlayers:
         self._player_args: dict = player_args
 
         self.species: list[list[BasePlayer]]
-        self.species_no: int = 0
-        self.generation: int = g
-        self.per_species: bool = per_species
 
         self.total_generations = len(list(self.folder.iterdir()))
+        self.generation: int = g
+        self.species_no: int = 0
+        self.per_species: bool = per_species
     
     @property
     def generation(self) -> int:
@@ -52,18 +52,33 @@ class PlaybackPlayers:
             except OSError:
                 raise Exception('Please keep playback saves clean from other files.')
 
+        # Set the number of species in the current generation    
+        self.total_species = len(list(species_source.iterdir()))
+
+    @property
+    def species_no(self) -> int:
+        return self._species_no
+    
+    @species_no.setter
+    def species_no(self, s: int) -> None:
+        """Set self._species_no and set self.current_players to the corresponding species."""
+        
+        self._species_no = s % self.total_species
+        self.current_players = self.species[self._species_no]
+
     @property
     def per_species(self) -> bool:
         return self._per_species
     
     @per_species.setter
     def per_species(self, value: bool) -> None:
-        """Set self._per_species and create self.current_players."""
+        """Set self._per_species and set self.current_players to either the first Species 
+        or the entire generation."""
 
         self._per_species = value
 
         if value:
-            self.current_players = self.species[self.species_no]
+            self.current_players = self.species[0]
         else:
             self.current_players = []
             for specie in self.species:
