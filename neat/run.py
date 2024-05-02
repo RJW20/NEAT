@@ -3,7 +3,6 @@ from pathlib import Path
 from multiprocessing import Pool, cpu_count
 
 from neat.base_player import BasePlayer
-from neat.settings import settings_handler
 from neat.population import Population
 
 
@@ -24,9 +23,6 @@ def run(
      - population_settings: describing the Population characteristics.
      - playback_settings: determining where and what to save each generation.
     """
-
-    # Ensure the settings contain enough entries with the correct types
-    settings = settings_handler(settings)
 
     # Create the Population
     try:
