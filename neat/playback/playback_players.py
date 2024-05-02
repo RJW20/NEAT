@@ -23,6 +23,8 @@ class PlaybackPlayers:
         self.species_no: int = 0
         self.generation: int = g
         self.per_species: bool = per_species
+
+        self.total_generations = len(list(self.folder.iterdir()))
     
     @property
     def generation(self) -> int:
@@ -32,7 +34,7 @@ class PlaybackPlayers:
     def generation(self, g: int) -> None:
         """Set self._generation and load in the Genomes from the corresponding save folder."""
 
-        self._generation = g
+        self._generation = ((g - 1) % self.total_generations) + 1
 
         self.species = []
         species_source = self.folder / str(g)
