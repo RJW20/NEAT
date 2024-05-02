@@ -7,6 +7,7 @@ defaults = {
     'population_settings': {
         'cull_percentage': 0.5, 
         'max_staleness': 20,
+        'save_folder': 'latest_population'
     },
 
     'species_settings': {
@@ -24,7 +25,21 @@ defaults = {
         'weight_replacement_rate': 0.1,
         'connection_rate': 0.1,
         'node_rate': 0.03,
-    }
+    },
+
+    'progress_settings': {
+        'print_progress': True,
+        'record_progress': False,
+        'filename': 'progress',
+        'bests': ['fitness'],
+        'averages': ['fitness'],
+        'include_species': True,
+    },
+
+    'playback_settings': {
+        'save_folder': 'playback',
+        'number': 1,
+    },
 
 }
 
@@ -61,10 +76,19 @@ types = {
         'node_rate': float,
     },
 
+    'progress_settings': {
+        'print_progress': bool,
+        'record_progress': bool,
+        'filename': str,
+        'bests': list,
+        'averages': list,
+        'include_species': bool,
+    },
+
     'playback_settings': {
         'save_folder': str,
         'number': int,
-    }
+    },
 
 }
 
@@ -81,20 +105,16 @@ def settings_handler(settings: dict) -> dict:
         settings['player_args']
         settings['genome_settings']
         settings['population_settings']
-        settings['playback_settings']
     except KeyError as e:
         raise Exception(f'Settings {e.args[0]} not found in settings.')
     
     # Create sub-dictionaries that have full default alternatives if needed
-    try:
-        settings['species_settings']
-    except KeyError:
-        settings['species_settings'] = dict()
+    for setting in ['species', 'reproduction', 'progress', 'playback']:
 
-    try:
-        settings['reproduction_settings']
-    except KeyError:
-        settings['reproduction_settings'] = dict()
+        try:
+            settings[setting + '_settings']
+        except KeyError:
+            settings[setting + '_settings'] = dict()
 
     # Verify they are dictionaries
     for name in types.keys():
@@ -125,6 +145,11 @@ def settings_handler(settings: dict) -> dict:
                 # Type
                 if not isinstance(setting, type_value):
                     raise TypeError(f'Setting \'{key}\' in {name} must be of type {type_value}.')
+                if isinstance(setting, list):
+                    # All lists are lists of strings
+                    for value in setting:
+                        if not isinstance(value, str):
+                            raise TypeError(f'Attribute in {name}[{key}] must be of type str.')
                 
                 # Range
                 if isinstance(setting, int):

@@ -32,7 +32,7 @@ population_settings = {
     # The number of generations to go without improvement before removing all but the 2 best performing Species
     'max_staleness': None,  # Default = 20
     # Folder to save each generation to (overwritten each time) so the program can be paused and resumed
-    'save_folder': '',
+    'save_folder': None, # Default = 'latest_population'
 
 }
 
@@ -69,12 +69,31 @@ reproduction_settings = {
 }
 
 
+progress_settings = {
+
+    'print_progress': None, # Default = True
+    # Choose whether to build a record of the progress at the end of each generation in a csv file
+    'record_progress': None, # Default = False
+    # Filename of csv file to output each generation's progress (if applicable)
+    'filename': None, # Default = 'progress'
+    # For bests and averages these must be attributes of the Player class you use
+    # The Player class will always have the fitness attribute
+    # Attributes to keep track of the Population's best
+    'bests': None,  # Default = ['fitness']
+    # Attributes to keep track of the Population' average
+    'averages': None,    # Default = ['fitness']
+    # Choose whether to include the number of Species in the progress report
+    'include_species': None, # Default = True
+
+}
+
+
 playback_settings = {
 
     # Folder to save the top performing Genomes of each generation to
-    'save_folder': '',
+    'save_folder': None,  # Default = 'playback'
     # The number of Genomes from each Species to save (set to -1 for all)
-    'number': -1,
+    'number': None,   # Default = 1
 
 }
 
@@ -84,7 +103,7 @@ settings = {
     # Choose whether to start a Population of Players with randomized Genomes or load a previous save
     # When choosing to load they will be attempted to be loaded from population_settings['save_folder']
     'creation_type': 'new', # Options are ['new', 'load']
-    # Choose whether to load the settings from the save or use the ones present in this file
+    # Choose whether to load the settings from the save or use the ones present in this file (if applicable)
     'load_all_settings': True,
     # The number of generations to run the Population until
     # A loaded Population will remember the generation it was saved at and still only run till this number
@@ -95,6 +114,7 @@ settings = {
     'population_settings': population_settings,
     'species_settings': species_settings,
     'reproduction_settings': reproduction_settings,
+    'progress_settings': progress_settings,
     'playback_settings': playback_settings,
 
 }
