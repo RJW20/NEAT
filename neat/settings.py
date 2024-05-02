@@ -92,11 +92,12 @@ types = {
 }
 
 
-def settings_handler(settings: dict) -> dict:
+def settings_handler(settings: dict, silent: bool = False) -> dict:
     """Make sure all settings exist (where applicable), are of the right type and 
     in their viable range.
     
     Also set default values where settings do not exist (if applicable).
+    Print to console all default values used if silent is False.
     """
 
     # Check the settings has the necessary sub-dictionaries
@@ -130,7 +131,8 @@ def settings_handler(settings: dict) -> dict:
                     raise TypeError
             except (KeyError, TypeError):
                 settings[name][key] = default_value
-                print(f'Using default value {default_value} for \'{key}\' in {name}.')
+                if not silent:
+                    print(f'Using default value {default_value} for \'{key}\' in {name}.')
 
     # Check values exist, are of right type and in their viable range
     for name, type_dict in types.items():
@@ -151,7 +153,8 @@ def settings_handler(settings: dict) -> dict:
                             raise TypeError(f'Attribute in {name}[{key}] must be of type str.')
                 
                 # Range
-                if isinstance(setting, int):
+                if isinstance(setting, int) and name != 'progress_settings':
+                    # bools set to False in progress settings register as int = 0
                     # All ints > 0 except playback_settings['number']
                     if setting <= 0 and key != 'number':
                         raise ValueError(f'Setting \'{key}\' in {name} must be positive.')

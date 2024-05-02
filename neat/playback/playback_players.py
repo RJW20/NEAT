@@ -9,19 +9,19 @@ class PlaybackPlayers:
 
     def __init__(
         self, 
-        playback_folder: Path, 
+        playback_folder: str, 
         PlayerClass: type,
         player_args: dict,
         g: int = 1,
         per_species: bool = True,
     ) -> None:
-        self.folder: Path = playback_folder
+        self.folder: str = playback_folder
         self._PlayerClass: type = PlayerClass
         self._player_args: dict = player_args
 
         self.species: list[list[BasePlayer]]
 
-        self.total_generations = len(list(self.folder.iterdir()))
+        self.total_generations = len(list(Path(self.folder).iterdir()))
         self.generation: int = g
         self.species_no: int = 0
         self.per_species: bool = per_species
@@ -37,11 +37,10 @@ class PlaybackPlayers:
         self._generation = ((g - 1) % self.total_generations) + 1
 
         self.species = []
-        species_source = self.folder / str(g)
-        for folder in species_source.iterdir():
+        species_source = Path(self.folder) / str(g)
+        for genomes_source in species_source.iterdir():
             
             specie = []
-            genomes_source = species_source / folder
             try:
                 genomes = [Genome.load(file_path) for file_path in genomes_source.iterdir()]
                 for genome in genomes:
