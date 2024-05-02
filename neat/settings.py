@@ -127,7 +127,7 @@ def settings_handler(settings: dict) -> dict:
         for key, default_value in default.items():
             try:
                 setting = settings[name][key]
-                if not setting:
+                if setting is None:
                     raise TypeError
             except (KeyError, TypeError):
                 settings[name][key] = default_value
