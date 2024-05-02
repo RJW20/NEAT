@@ -19,7 +19,7 @@ class PlayerFactory:
         reproduction_settings: dict,
     ) -> None:
         self._PlayerClass: type = PlayerClass
-        self._player_args: dict = player_args
+        self.player_args: dict = player_args
 
         try:
             self._genome_input_count = genome_settings['input_count']
@@ -38,9 +38,34 @@ class PlayerFactory:
         except KeyError as e:
             raise Exception(f'Setting \'{e.args[0]}\' not found in reproduction_settings.')
         
+    @property
+    def genome_settings(self) -> dict:
+        """Recollect the attributes that make up the genome_settings dictionary."""
+
+        genome_settings = {
+            'input_count': self._genome_input_count,
+            'output_count': self._genome_output_count,
+            'hidden_activation': self._hidden_activation.__name__,
+        }
+        return genome_settings
+    
+    @property
+    def reproduction_settings(self) -> dict:
+        """Recollect the attributes that make up the reproduction_settings dictionary."""
+
+        reproduction_settings = {
+            'crossover_rate': self._crossover_rate,
+            'disabled_rate': self._disabled_rate,
+            'weights_rate': self._weights_rate,
+            'weight_replacement_rate': self._weight_replacement_rate,
+            'connection_rate': self._connection_rate,
+            'node_rate': self._node_rate,
+        }
+        return reproduction_settings
+        
     def empty_player(self) -> BasePlayer:
         """Return a new Player without a Genome."""
-        return self._PlayerClass(self._player_args)
+        return self._PlayerClass(self.player_args)
         
     def new_players(self, total: int, history: History) -> list[BasePlayer]:
         """Return a list of length total consisting of Players which have random Genomes."""
