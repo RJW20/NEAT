@@ -15,8 +15,8 @@ from neat.population.progress_handler import ProgressHandler
 class Population:
     """Contains Species of Players."""
 
-    def __init__(self, PlayerClass: type, settings: dict) -> None:
-        self.generation: int
+    def __init__(self, PlayerClass: type, settings: dict, generation: int = 1) -> None:
+        self.generation: int = generation
         self.history: History
         self.players: list[BasePlayer]
         self.species: list[Species]
@@ -53,7 +53,7 @@ class Population:
         )
 
         # Initiate the progress handler
-        self.progress_handler: ProgressHandler = ProgressHandler(progress_settings)
+        self.progress_handler: ProgressHandler = ProgressHandler(progress_settings, self.generation)
 
     @property
     def total_adjusted_fitness(self) -> float:
@@ -318,6 +318,12 @@ class Population:
             attributes_source = folder / 'attributes.pickle'
             with attributes_source.open('rb') as attributes_src:
                 loaded_attributes = pickle.load(attributes_src)
+            try:
+                generation = loaded_attributes['generation']
+                staleness = loaded_attributes['staleness']
+                best_fitness = loaded_attributes['best_fitness']
+            except KeyError as e:
+                raise Exception(f'Attribute \'{e.args[0]}\' not found in attributes save attributes.pickle in \'{folder}\'.')
 
             # History
             history_source = folder / 'history.pickle'
@@ -334,16 +340,11 @@ class Population:
         except OSError as e:
             raise Exception(f'Unable to open part of Population save \'{e.filename}\' in \'{folder}\'.')
 
-        # Create the Population instance with appropriate settings and attributes  
-        population = cls(PlayerClass, loaded_settings)
+        # Create the Population instance with appropriate settings and attributes          
+        population = cls(PlayerClass, loaded_settings, generation)
+        population.staleness = staleness
+        population.best_fitness = best_fitness
         
-        try:
-            population.generation = loaded_attributes['generation']
-            population.staleness = loaded_attributes['staleness']
-            population.best_fitness = loaded_attributes['best_fitness']
-        except KeyError as e:
-            raise Exception(f'Attribute \'{e.args[0]}\' not found in attributes save attributes.pickle in \'{folder}\'.')
-
         population.history = loaded_history
 
         population.players = []
