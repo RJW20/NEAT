@@ -7,7 +7,6 @@ from neat.base_player import BasePlayer
 from neat.genome import Genome
 from neat.population.species import Species
 from neat.history import History
-from neat.settings import settings_handler
 from neat.population.player_factory import PlayerFactory
 
 
@@ -24,7 +23,6 @@ class Population:
         self.best_fitness: int
 
         # Unload the settings
-        settings = settings_handler(settings)
         player_args = settings['player_args']
         genome_settings = settings['genome_settings']
 
