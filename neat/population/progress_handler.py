@@ -52,7 +52,7 @@ class ProgressHandler:
         Also create or read in the column headers.
         """
 
-        record = Path(self.filename / '.csv')
+        record = Path(self.filename + '.csv')
 
         if generation == 1 and record.exists():
             raise Exception(f'A progress record already exists in {record}, please move it or change \'filename\' ' + \
@@ -114,7 +114,7 @@ class ProgressHandler:
         If extra observations have been made since the record was created they won't be included.
         """
 
-        record = Path(self.filename / '.csv')
+        record = Path(self.filename + '.csv')
 
         # Turn report into valid row
         row = {'generation': generation}
