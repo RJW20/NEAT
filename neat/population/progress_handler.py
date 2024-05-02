@@ -106,7 +106,7 @@ class ProgressHandler:
         for attribute, observation in report.items():
             print(f'{INDENT}{attribute}: {", ".join([f'{key} = {value}' for key, value in observation.items()])}')
         if self.include_species:
-            print(f'{INDENT}Number of Species: {no_of_species}')
+            print(f'{INDENT}number of species: {no_of_species}')
 
     def record_report(self, generation: int, report: dict, no_of_species: int) -> None:
         """Add all observations in the report to a new line in the record.
