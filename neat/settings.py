@@ -7,7 +7,6 @@ defaults = {
     'population_settings': {
         'cull_percentage': 0.5, 
         'max_staleness': 20,
-        'save_folder': 'latest_population'
     },
 
     'species_settings': {

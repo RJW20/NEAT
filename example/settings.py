@@ -32,7 +32,7 @@ population_settings = {
     # The number of generations to go without improvement before removing all but the 2 best performing Species
     'max_staleness': None,  # Default = 20
     # Folder to save each generation to (overwritten each time) so the program can be paused and resumed
-    'save_folder': None, # Default = 'latest_population'
+    'save_folder': None,
 
 }
 
