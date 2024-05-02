@@ -65,8 +65,8 @@ class ProgressHandler:
             for attribute, measures in self.observables.items():
                 for measure in measures:
                     self.fieldnames.append(f'{measure}_{attribute}')
-                if self.include_species:
-                    self.fieldnames.append('number_of_species')
+            if self.include_species:
+                self.fieldnames.append('number_of_species')
 
             with record.open("w+") as csv_file:
                 csv_writer = writer(csv_file, delimiter=',')
@@ -87,15 +87,15 @@ class ProgressHandler:
             try:
                 observation = dict()
                 values = [player.__dict__[attribute] for player in players]
-                if 'b' in measures:
+                if 'best' in measures:
                     observation['best'] = max(values)
-                if 'a' in measures:
+                if 'average' in measures:
                     observation['average'] = sum(values) / len(values)
                 observations[attribute] = observation
             except KeyError as e:
                 raise Exception(f'Attribute \'{e.args[0]}\' not found in the given PlayerClass, please check all ' + 
                                 'attributes listed in progress_settings.')
-            
+        
         return observations
 
     def print_report(self, generation: int, report: dict, no_of_species: int) -> None:
