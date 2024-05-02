@@ -107,7 +107,7 @@ class Species:
         """Sort the Players in the Species by fitness in descending order."""
         self.players.sort(key = lambda player: player.fitness, reverse=True)
 
-    def check_progress(self) -> None:
+    def check_improving(self) -> None:
         """Check if this Species is improving."""
 
         if self.champ.fitness > self.best_fitness:

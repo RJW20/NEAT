@@ -7,7 +7,9 @@ from neat.base_player import BasePlayer
 from neat.genome import Genome
 from neat.population.species import Species
 from neat.history import History
+from neat.settings import settings_handler
 from neat.population.player_factory import PlayerFactory
+from neat.population.progress_handler import ProgressHandler
 
 
 class Population:
@@ -23,6 +25,7 @@ class Population:
         self.best_fitness: int
 
         # Unload the settings
+        settings = settings_handler(settings)
         player_args = settings['player_args']
         genome_settings = settings['genome_settings']
 
@@ -35,6 +38,8 @@ class Population:
         self._species_settings: dict = settings['species_settings']
         reproduction_settings = settings['reproduction_settings']
 
+        progress_settings = settings['progress_settings']
+
         playback_settings = settings['playback_settings']
         self._playback_folder: str = playback_settings['save_folder']
         self._playback_number: int = playback_settings['number']
@@ -46,6 +51,9 @@ class Population:
             genome_settings = genome_settings,
             reproduction_settings = reproduction_settings,
         )
+
+        # Initiate the progress handler
+        self.progress_handler: ProgressHandler = ProgressHandler(progress_settings)
 
     @property
     def total_adjusted_fitness(self) -> float:
@@ -96,11 +104,11 @@ class Population:
 
         self.species.sort(key = lambda specie: specie.best_fitness, reverse=True)
 
-    def check_progress(self) -> None:
+    def check_improving(self) -> None:
         """Check whether the Population is improving on both a Specie and overall level."""
 
         for specie in self.species:
-            specie.check_progress()
+            specie.check_improving()
 
         if self.species[0].best_fitness > self.best_fitness:
             self.staleness = 0
@@ -172,9 +180,10 @@ class Population:
 
         self.speciate()
         self.rank_species()
-        self.check_progress()
+        self.check_improving()
         self.fitness_share()
 
+        self.progress_handler.report(self.generation, self.players, self.species)
         self.save_playback()
 
         if not self.gone_stale:
@@ -206,7 +215,7 @@ class Population:
             playback_folder.mkdir(parents=True, exist_ok=False)
         except FileExistsError:
             raise Exception(f'Unable to save playback in \'{self._playback_folder}\', please set a different ' + \
-                'playback folder in settings or delete any previous saves in the current folder.')
+                             'playback folder in settings or delete any previous saves in the current folder.')
         
         # Save each Species' Genomes
         for i, specie in enumerate(self.species):
@@ -229,35 +238,23 @@ class Population:
         save_folder.mkdir(parents=True, exist_ok=True)
 
         # Settings
-        genome_settings = {
-            'input_count': self.player_factory._genome_input_count,
-            'output_count': self.player_factory._genome_output_count,
-            'hidden_activation': self.player_factory._hidden_activation.__name__,
-        }
         population_settings = {
             'size': self._size,
             'cull_percentage': self._cull_percentage,
             'max_staleness': self._max_staleness,
             'save_folder': self._save_folder,
         }
-        reproduction_settings = {
-            'crossover_rate': self.player_factory._crossover_rate,
-            'disabled_rate': self.player_factory._disabled_rate,
-            'weights_rate': self.player_factory._weights_rate,
-            'weight_replacement_rate': self.player_factory._weight_replacement_rate,
-            'connection_rate': self.player_factory._connection_rate,
-            'node_rate': self.player_factory._node_rate,
-        }
         playback_settings = {
             'save_folder': self._playback_folder,
             'number': self._playback_number,
         }
         settings = {
-            'player_args': self.player_factory._player_args,
-            'genome_settings': genome_settings,
+            'player_args': self.player_factory.player_args,
+            'genome_settings': self.player_factory.genome_settings,
             'population_settings': population_settings,
             'species_settings': self._species_settings,
-            'repoduction_settings': reproduction_settings,
+            'repoduction_settings': self.player_factory.reproduction_settings,
+            'progress_settings': self.progress_handler.settings,
             'playback_settings': playback_settings,
         }
         settings_destination = save_folder / 'settings.pickle'
@@ -312,6 +309,7 @@ class Population:
             try:
                 if not settings['load_all_settings']:
                     loaded_settings['player_args'] = settings['player_args']
+                    loaded_settings['progress_settings'] = settings['progress_settings']
                     loaded_settings['playback_settings'] = settings['playback_settings']
             except KeyError as e:
                 raise Exception(f'Setting \'{e.args[0]}\' not found in {e.args[1]}.')
