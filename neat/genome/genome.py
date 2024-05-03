@@ -6,7 +6,7 @@ import pickle
 from neat.genome.node import Node
 from neat.genome.connection import Connection
 from neat.genome.connections_list import ConnectionsList
-from neat.genome.activation_functions import ActivationFunction
+from neat.genome.activation_functions import ActivationFunction, sigmoid
 from neat.history import History
 
 
@@ -81,7 +81,7 @@ class Genome:
 
         # Add output Nodes
         for _ in range(output_count):
-            node = Node(number=genome.next_node, layer=1)
+            node = Node(number=genome.next_node, layer=1, activation=sigmoid)
             genome.nodes.append(node)
 
         # Fully connect the network
