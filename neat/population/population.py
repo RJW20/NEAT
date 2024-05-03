@@ -225,7 +225,7 @@ class Population:
         for i, specie in enumerate(self.species):
             destination = playback_folder / str(i)
             destination.mkdir()
-            num_to_save = min(self._playback_number, specie.size)
+            num_to_save = min(self._playback_number, specie.size) if self._playback_number != -1 else specie.size
             for j, player in enumerate(specie.players[:num_to_save]):
                 player.genome.save(destination, str(j))
 
