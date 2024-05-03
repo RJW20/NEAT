@@ -29,7 +29,8 @@ class ProgressHandler:
 
         # Initiate the record and column headers if needed.
         self.fieldnames: list
-        self.create_record(generation)
+        if self.record_progress:    
+            self.create_record(generation)
 
     @property
     def settings(self) -> dict:
@@ -132,7 +133,12 @@ class ProgressHandler:
     def report(self, generation: int, players: list[BasePlayer], species: list[Species]) -> None:
         """Print out and record progress as required."""
 
+        if not self.print_progress and not self.record_progress:
+            return
+
         report = self.create_report(players)
         no_of_species = len(species)
-        self.print_report(generation, report, no_of_species)
-        self.record_report(generation, report, no_of_species)
+        if self.print_progress:
+            self.print_report(generation, report, no_of_species)
+        if self.record_progress:
+            self.record_report(generation, report, no_of_species)
