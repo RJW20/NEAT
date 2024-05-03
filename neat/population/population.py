@@ -143,7 +143,9 @@ class Population:
         
     def mass_extinction_event(self) -> None:
         """Remove all but the top two perfoming Species."""
+
         self.species = self.species[:2]
+        self.staleness = 0
 
     def next_generation(self) -> None:
         """Populate self.players with the next generation."""
