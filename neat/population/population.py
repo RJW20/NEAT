@@ -91,6 +91,7 @@ class Population:
                 if specie.is_same_species(player):
                     specie.players.append(player)
                     species_found = True
+                    break
 
             if not species_found:
                 new_species = Species(player, self._species_settings)
