@@ -97,13 +97,16 @@ class Population:
                 new_species = Species(player, self._species_settings)
                 self.species.append(new_species)
 
+        # Remove any that were in the last generation but have no players this generation
+        self.species = [specie for specie in self.species if len(specie.players) > 0]
+
     def rank_species(self) -> None:
         """Sort the Species in the Population by their best fitness in descending order."""
 
         for specie in self.species:
             specie.rank_players()
 
-        self.species.sort(key = lambda specie: specie.best_fitness, reverse=True)
+        self.species.sort(key = lambda specie: specie.champ.fitness, reverse=True)
 
     def check_improving(self) -> None:
         """Check whether the Population is improving on both a Specie and overall level."""
