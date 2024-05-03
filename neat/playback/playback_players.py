@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Generator
 
 from neat.base_player import BasePlayer
 from neat.genome import Genome
@@ -21,6 +22,7 @@ class PlaybackPlayers:
 
         self.species: list[list[BasePlayer]]
 
+        self._per_species = True
         self.total_generations = len(list(Path(self.folder).iterdir()))
         self.generation: int = g
         self.species_no: int = 0
@@ -34,10 +36,10 @@ class PlaybackPlayers:
     def generation(self, g: int) -> None:
         """Set self._generation and load in the Genomes from the corresponding save folder."""
 
-        self._generation = ((g - 1) % self.total_generations) + 1
+        self._generation = ((g - 1 + self.total_generations) % self.total_generations) + 1
 
         self.species = []
-        species_source = Path(self.folder) / str(g)
+        species_source = Path(self.folder) / str(self.generation)
         for genomes_source in species_source.iterdir():
             
             specie = []
@@ -54,6 +56,10 @@ class PlaybackPlayers:
         # Set the number of species in the current generation    
         self.total_species = len(list(species_source.iterdir()))
 
+        # Trigger a refresh of self.current_players
+        self.species_no = 0
+        self.per_species = self.per_species
+
     @property
     def species_no(self) -> int:
         return self._species_no
@@ -61,6 +67,9 @@ class PlaybackPlayers:
     @species_no.setter
     def species_no(self, s: int) -> None:
         """Set self._species_no and set self.current_players to the corresponding species."""
+
+        if not self.per_species:
+            return
         
         self._species_no = s % self.total_species
         self.current_players = self.species[self._species_no]
@@ -86,3 +95,7 @@ class PlaybackPlayers:
     def __getitem__(self, index: int) -> BasePlayer:
         """Return the player at the given index value in self.current_players."""
         return self.current_players[index]
+    
+    def __iter__(self) -> Generator[BasePlayer,None,None]:
+        """Yield the players in self.current_players."""
+        yield from self.current_players
