@@ -96,7 +96,7 @@ class Species:
 
         excess, disjoint = self.excess_and_disjoint(player.genome)
         average_weight_difference = self.average_weight_difference(player.genome)
-        genome_normalizer = max(len(self.rep.connections) - 20, 1)
+        genome_normalizer = max(len(list(self.rep.connections)) - 20, 1)
 
         compatibility = (self._c1 * excess + self._c2 * disjoint) / genome_normalizer + \
                         self._c3 * average_weight_difference

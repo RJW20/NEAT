@@ -26,6 +26,9 @@ class Innovation:
         if not (self.from_node_number == from_node.number and self.to_node_number == to_node.number):
             return False
         
+        if len(self.present_connections) != len(list(genome.connections)):
+            return False
+        
         for connection in genome.connections:
             if connection.innovation_number not in self.present_connections:
                 return False

@@ -53,7 +53,7 @@ class Genome:
         for layer in range(self.layers):
             max_connections += nodes_in_front[layer] * nodes_in_layers[layer]
 
-        return max_connections == len(self.connections)
+        return max_connections == len(list(self.connections))
 
     @property
     def nodes_dict(self) -> dict[int, Node]:
@@ -177,7 +177,8 @@ class Genome:
         for connection in self.connections:
             from_node = clone_nodes[connection.from_node.number]
             to_node = clone_nodes[connection.to_node.number]
-            clone.connections.append(connection.clone(from_node, to_node))
+            cloned_connection = connection.clone(from_node, to_node)
+            cloned_connection.from_node.output_connections.append(cloned_connection)
 
         # Let all the Nodes know about each other
 
