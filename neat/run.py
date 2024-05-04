@@ -46,7 +46,7 @@ def run(
         total_generations = settings['total_generations']
     except KeyError as e:
         raise Exception(f'Setting {e.args[0]} not found in settings.')
-
+    
     cores_to_use = cpu_count() // 2
 
     while population.generation <= total_generations:
