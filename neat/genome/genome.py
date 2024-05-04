@@ -1,11 +1,10 @@
 from __future__ import annotations
-from typing import Iterable
+from typing import Iterable, Generator
 from pathlib import Path, PosixPath
 import pickle
 
 from neat.genome.node import Node
 from neat.genome.connection import Connection
-from neat.genome.connections_list import ConnectionsList
 from neat.genome.activation_functions import ActivationFunction, sigmoid
 from neat.history import History
 
@@ -16,14 +15,19 @@ class Genome:
 
     def __init__(self, input_count: int, output_count: int) -> None:
         self.nodes: list[Node] = list()
-        self.connections: ConnectionsList[Connection] = ConnectionsList()
         self.layers: int
         self.input_count: int = input_count
         self.output_count: int = output_count
         self.bias_node_idx: int = input_count
 
     @property
-    def innovation_numbers(self) -> set:
+    def connections(self) -> Generator[Connection,None,None]:
+        """Return the Connections in the Genome."""
+        for node in self.nodes:
+            yield from node.output_connections
+
+    @property
+    def innovation_numbers(self) -> set[int]:
         """Return the innovation numbers found in the this Genome's Connections."""
         return {connection.innovation_number for connection in self.connections}
 
@@ -103,7 +107,7 @@ class Genome:
             new_connection = Connection(from_node, to_node, weight, innovation_number)
         else:
             new_connection = Connection.random_weight(from_node, to_node, innovation_number)
-        self.connections.append(new_connection)
+        new_connection.from_node.output_connections.append(new_connection)
 
     def add_node(self, connection: Connection, activation_function: ActivationFunction, history: History) -> None:
         """Disable the given Connection and then insert a Node inbetween the previous from- and 

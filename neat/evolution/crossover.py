@@ -49,6 +49,6 @@ def crossover(genome1: Genome, genome2: Genome, disabled_rate: float) -> Genome:
             to_node = result_nodes[connection.to_node.number]
             result_connection = connection.clone(from_node, to_node)
             result_connection.enabled = enabled
-            result.connections.append(result_connection)
+            result_connection.from_node.output_connections.append(result_connection)
 
     return result
