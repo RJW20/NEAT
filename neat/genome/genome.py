@@ -117,7 +117,6 @@ class Genome:
         The weight of the Connection from the original from_node to the new Node will be 1.
         The weight of the Connection from the new Node to the original to_node will be the weight 
         of the original Connection.
-        The bias will be connected to the new Node by a Connection with weight 0.
         The new Node will have the given activation function.
         """
         
@@ -140,7 +139,6 @@ class Genome:
         # Connect to the original Nodes and the bias Node
         self.add_connection(connection.from_node, new_node, history, weight=1)
         self.add_connection(new_node, connection.to_node, history)
-        self.add_connection(self.nodes[self.bias_node_idx], new_node, history, weight=0)
 
     def propagate(self, input: Iterable[float]) -> tuple[float, ...]:
         """Feed in input values for the NN and return output.
