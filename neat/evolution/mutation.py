@@ -47,18 +47,14 @@ def add_node(genome: Genome, node_activation: ActivationFunction, history: Histo
     The weight of the Connection from the original from_node to the new Node will be 1.
     The weight of the Connection from the new Node to the original to_node will be the weight 
     of the original Connection.
-    The bias will be connected to the new Node by a Connection with weight 0.
     """
 
-    # Get a Connection that is not from the bias Node
+    # Get a random Connection
     connections = list(genome.connections)
     connection = random.choice(connections)
-    while connection.from_node == genome.nodes[genome.bias_node_idx]:
-        connection = random.choice(connections)
 
     # Add a Node in the middle of the Connection
     genome.add_node(connection, node_activation, history)
-
 
 
 def mutate(
