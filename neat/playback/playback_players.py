@@ -16,7 +16,7 @@ class PlaybackPlayers:
         g: int = 1,
         per_species: bool = True,
     ) -> None:
-        self.folder: str = playback_folder
+        self.folder: Path = Path(playback_folder)
         self._PlayerClass: type = PlayerClass
         self._player_args: dict = player_args
 
@@ -39,7 +39,7 @@ class PlaybackPlayers:
         self._generation = ((g - 1 + self.total_generations) % self.total_generations) + 1
 
         self.species = []
-        species_source = Path(self.folder) / str(self.generation)
+        species_source = self.folder / str(self.generation)
         for genomes_source in species_source.iterdir():
             
             specie = []
