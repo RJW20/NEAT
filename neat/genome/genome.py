@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Iterable, Generator
 from pathlib import Path, PosixPath
+import random
 import pickle
 
 from neat.genome.node import Node
@@ -69,7 +70,7 @@ class Genome:
     @classmethod
     def new(cls, input_count: int, output_count: int, history: History) -> Genome:
         """Return a Genome with a list of Nodes containing the input, bias and output Nodes, 
-        and a list of (random) Connections between them."""
+        as well as one random Connection between them."""
 
         genome = cls(input_count, output_count)
         genome.layers = 2
@@ -88,10 +89,10 @@ class Genome:
             node = Node(number=genome.next_node, layer=1, activation=sigmoid)
             genome.nodes.append(node)
 
-        # Fully connect the network
-        for from_node in genome.nodes[:genome.bias_node_idx + 1]:
-            for to_node in genome.nodes[genome.bias_node_idx + 1:]:
-                genome.add_connection(from_node, to_node, history)
+        # Add one random Connection
+        from_node = random.choice(genome.nodes[:genome.bias_node_idx + 1])
+        to_node = random.choice(genome.nodes[genome.bias_node_idx + 1:])
+        genome.add_connection(from_node, to_node, history)
 
         return genome
     
