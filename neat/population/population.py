@@ -128,7 +128,7 @@ class Population:
 
     def remove_stale_species(self) -> None:
         """Remove Species which haven't improved for too many generations."""
-        self.species = [self.species[0]] + [specie for specie in self.species[1:] if not specie.gone_stale]
+        self.species = [specie for specie in self.species if not specie.gone_stale]
         if len(self.species) == 0:
             raise Exception('Training has stagnated too badly, please try again with changed set-up, or ' + \
                             'reduce the \'max_staleness\' in species_settings')
