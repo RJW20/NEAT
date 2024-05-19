@@ -219,4 +219,4 @@ class Genome:
             
     def __repr__(self) -> str:
         """Return representation of this Genome."""
-        return f'<Genome: Layers = {self.layers}, Nodes = {len(self.nodes)}, Connections = {len(self.connections)}>'
+        return f'<Genome: Layers = {self.layers}, Nodes = {len(self.nodes)}, Connections = {len(list(self.connections))}>'
