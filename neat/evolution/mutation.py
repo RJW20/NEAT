@@ -42,7 +42,7 @@ def add_connection(genome: Genome, history: History) -> None:
 
 
 def add_node(genome: Genome, node_activation: ActivationFunction, history: History) -> None:
-    """Add a new Node inside a random Connection in the given Genome.
+    """Add a new Node inside a random enabled Connection in the given Genome.
     
     The weight of the Connection from the original from_node to the new Node will be 1.
     The weight of the Connection from the new Node to the original to_node will be the weight 
@@ -50,8 +50,8 @@ def add_node(genome: Genome, node_activation: ActivationFunction, history: Histo
     """
 
     # Get a random Connection
-    connections = list(genome.connections)
-    connection = random.choice(connections)
+    viable_connections = [connection for connection in genome.connections if connection.enabled]
+    connection = random.choice(viable_connections)
 
     # Add a Node in the middle of the Connection
     genome.add_node(connection, node_activation, history)
