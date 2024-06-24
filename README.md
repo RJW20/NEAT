@@ -22,9 +22,10 @@ Either fill out all methods described or let the Player class also extend the cl
 This function is called for every Player in the population during each generation. It should consist of a loop that consistently calls the look, think and move methods of the Player and terminates when the Player is deemed to have lost or is successful enough that you consider it to have beaten the game. At the end of the function, a fitness should be assigned to the Player before returning it.
 
 ### Fitness
-This value is used to rank how well the Players have performed, and in turn the likelihood a Player passing its genes into the next generation. A higher fitness value indicates a more successful Player than a lower value, and it should be ensured that this is always a positive value. In the simplest case, this could just be a Player's score.
+This value is used to rank how well the Players have performed, and in turn the likelihood of a Player passing its genes into the next generation. A higher fitness value indicates a more successful Player than a lower value, and it should be ensured that this is always a positive value. In the simplest case, this could just be a Player's score.
 
 ### Configuring the Settings
+Some options have a default value indicated in the example `settings.py`, which can be left as None or completely removed and the default value for that setting will be used. If an entire dictionary has default values that you wish to use you may completely remove the dictionary.
 
 #### `player_args`
 The arguments needed to initiate an instance of the Player class.
@@ -61,7 +62,7 @@ The flags/values determining how and what progress to report at the end of each 
 - `print_progress`: choose whether to print a record of the progress to the terminal at the end of each generation.
 - `record_progress`: choose whether to build a record of the progress at the end of each generation in a csv file.
 - `filename`: filename of csv file to output each generation's progress (if applicable).
-- `bests`, `averages`: these must be numerical attributes of the Player class you use, and the best(max) and average of these attributes will be tracked.
+- `bests`, `averages`: these must be numerical attributes of the Player class you use, and the best (max) and average of these attributes will be tracked.
 - `include_species`: choose whether to include the number of Species in the progress report.
 
 #### `playback_settings`
@@ -70,15 +71,13 @@ The values controlling how and where Genomes for playback are saved:
 - `number`: the number of Genomes from each Species to save (set to -1 for all).
 
 #### `settings`
-A dictionary controlling the initiation and duration of the algorithm, as well as collating all other settings into one place:
-- `creation_type`: choose whether to start a Population of Players with randomized Genomes or load a previous save, when choosing to load they will be attempted to be loaded from `population_settings['save_folder']`.
-- `load_all_settings`: choose whether to load the settings from the save or use the ones present in this file (if applicable) - only the Player_args, progress_settings and playback_settings will be replaced.
+The dictionary controlling the initiation and duration of the algorithm, as well as collating all other settings into one place:
+- `creation_type`: choose whether to start a Population of Players with randomized Genomes or load a previous save - when choosing to load they will be attempted to be loaded from `population_settings['save_folder']`.
+- `load_all_settings`: choose whether to load the settings from the save or use the ones present in this file (if applicable) - only the `player_args`, `progress_settings` and `playback_settings` will be replaced.
 - `total_generations`: the number of generations to run the Population until (a loaded Population will remember the generation it was saved at and still only run till this number)
 
 #### `simulation_settings`
 Any constants/variables needed for simulating the Players should be here for easy adjustments.
-
-Some options have a default value indicated in the example `settings.py`, which can be left as None or completely removed and the default value for that setting will be used. If an entire dictionary has default values that you wish to use you may completely remove the dictionary.
 
 ## Running the Algorithm
 Run the function `main` in the example `main.py`.
