@@ -80,4 +80,6 @@ The dictionary controlling the initiation and duration of the algorithm, as well
 Any constants/variables needed for simulating the Players should be here for easy adjustments.
 
 ## Running the Algorithm
-Run the function `main` in the example `main.py`.
+Run the function `main` in the example `main.py`. \
+Genomes created during evolution and saved via the playback functionality may be viewed using my [Genome Utility](https://github.com/RJW20/NEAT-genome-utility.git)
+
