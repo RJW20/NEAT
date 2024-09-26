@@ -179,8 +179,6 @@ class Genome:
             cloned_connection = connection.clone(from_node, to_node)
             cloned_connection.from_node.output_connections.append(cloned_connection)
 
-        # Let all the Nodes know about each other
-
         clone.layers = self.layers
         clone.bias_node_idx = self.bias_node_idx
         
